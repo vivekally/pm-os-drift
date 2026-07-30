@@ -20,8 +20,11 @@ one phone call. See [TODOS.md](TODOS.md).
 
 ## Relationship to PM OS with Second Brain
 
-This is a re-sequencing of [vivekally/PM-OS-with-Second-Brain](https://github.com/vivekally/PM-OS-with-Second-Brain),
-not a replacement. That repo stays as it is. Four decisions changed here:
+This is a re-sequencing of the original PM OS with Second Brain design, not a
+replacement. The original repo is archived and private now; its full code and
+history live on, unchanged, at
+[pm-os-archive/second-brain](https://github.com/vivekally/pm-os-archive/tree/main/second-brain).
+Four decisions changed here:
 
 | | June 22 (old repo) | July 29 (this repo) |
 |---|---|---|
