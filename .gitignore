@@ -1,0 +1,20 @@
+# Local-only agent instructions — never pushed
+CLAUDE.md
+.claude/
+.gstack/
+.gbrain-source
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Deps / build
+node_modules/
+dist/
+.cache/
+*.log
+
+# Env
+.env
+.env.*
+!.env.example

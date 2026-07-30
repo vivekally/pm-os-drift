@@ -1,0 +1,21 @@
+{
+  "source_mockup": null,
+  "source_plan": "/Users/aially/.gstack/projects/vivekally-PM-OS-with-Second-Brain/aially-docs-pm-os-design-design-20260729-223155.md",
+  "mode": "plan-driven",
+  "html_file": "finalized.html",
+  "pretext_tier": "card-grid: prepare() + layout()",
+  "framework": "vanilla",
+  "iterations": 2,
+  "date": "2026-07-29",
+  "screen": "drift-report",
+  "branch": "docs/pm-os-design",
+  "notes": "Weekly strategy drift report. Structure per design doc Assignment: documented bets -> shipped+decided -> the three disagreements, every line cited. Metric strip and coverage-disclosure footer are structural borrows from whitespacehq.ai. Content is fictional (Kestrel, B2B expense platform). Added --drift/--drift-soft severity tokens to DESIGN.md (approved D2) because accent green on the worst finding misreads as good news.",
+  "verified": {
+    "viewports": [375, 768, 1440],
+    "pretext_blocks_measured": 19,
+    "console_errors": 0,
+    "clipped_blocks": 0,
+    "horizontal_scroll": false,
+    "reflow_proof": "h1 2->2->3 lines (68/58/86px), finding body 3->3->7 lines (67/67/157px) across 1440/768/375"
+  }
+}
