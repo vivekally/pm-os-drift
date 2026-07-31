@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Kestrel · Weekly Drift Report · Jul 28–Aug 3</title>
+<title>Kestrel · Weekly Drift Report · Jul 21–27</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -24,7 +24,7 @@
     font:400 15px/1.6 var(--ui); letter-spacing:-0.005em;
     -webkit-font-smoothing:antialiased;
   }
-  .wrap{max-width:820px; margin:0 auto; padding:calc(var(--s8) + 40px) var(--s6) var(--s12)}
+  .wrap{max-width:820px; margin:0 auto; padding:var(--s8) var(--s6) var(--s12)}
 
   /* ---------- masthead ---------- */
   .masthead{border-bottom:1px solid var(--border); padding-bottom:var(--s6); margin-bottom:var(--s6)}
@@ -181,25 +181,16 @@
   @media print{ .nav-link{display:none} }
   @media (max-width:768px){ .nav-link{position:static; display:inline-block; margin-bottom:var(--s4)} }
 
-  /* ---------- corrections (variant A: closed ticket) ---------- */
-  .corrections{margin:0 0 var(--s8)}
-  .correction-card{
-    display:flex; gap:var(--s3); align-items:flex-start; background:var(--surface);
-    border:1px solid var(--border); border-radius:6px; padding:var(--s3) var(--s4);
+  /* ---------- archive note (web only; not part of the emailed artifact) ---------- */
+  .archive-note{
+    font:400 12px/1.6 var(--mono); color:var(--muted); margin:0 0 var(--s6);
+    padding:var(--s3) var(--s4); background:var(--surface);
+    border:1px solid var(--border); border-left:3px solid var(--industry);
+    border-radius:0 4px 4px 0;
   }
-  .correction-check{
-    width:18px; height:18px; border-radius:50%; border:1px solid var(--accent);
-    color:var(--accent); font:600 11px/16px var(--ui); text-align:center; flex:none; margin-top:2px;
-  }
-  .correction-old{margin:0 0 4px; font-size:12px; color:var(--muted)}
-  .correction-old del{color:var(--muted)}
-  .correction-new{margin:0; font-size:13px; color:var(--text)}
-  .correction-src{
-    display:inline-block; margin-top:var(--s2);
-    font:400 11px/1.5 var(--mono); color:var(--muted); text-decoration:none;
-    border-bottom:1px solid var(--border);
-  }
-  .correction-src:hover{color:var(--code); border-bottom-color:var(--code)}
+  .archive-note a{color:var(--code); text-decoration:none; white-space:nowrap}
+  .archive-note a:hover{text-decoration:underline}
+  @media print{ .archive-note{display:none} }
 
   /* ---------- a11y ---------- */
   :focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:2px}
@@ -242,29 +233,31 @@
 </style>
 </head>
 <body>
-<a class="nav-link" href="report-1/" style="right:auto; left:var(--s4)">← Report #1</a>
-<a class="nav-link" href="onboarding/">See setup →</a>
+<a class="nav-link" href="../" style="right:auto; left:var(--s4)">← Current report</a>
+<a class="nav-link" href="../onboarding/">See setup →</a>
 <div class="wrap">
+
+  <p class="archive-note">Previous week · kept so the correction in the current report can be checked against what was actually flagged. <a href="../">Current report →</a></p>
 
   <header class="masthead">
     <p class="kicker"><span class="dot" aria-hidden="true"></span>PM OS · Weekly Drift Report</p>
-    <h1 data-pretext>Two bets drifted this week. One correction closed the loop from report #1.</h1>
+    <h1 data-pretext>Three bets drifted this week, and one decision contradicted the board deck.</h1>
     <p class="subject">
       <b>Kestrel</b> · prepared for Dana Okonkwo, Head of Product ·
-      <span class="period">week of Jul 28–Aug 3, 2026</span>
+      <span class="period">week of Jul 21–27, 2026</span>
     </p>
   </header>
 
   <dl class="strip" aria-label="Week summary">
     <div class="metric is-ok">
       <dt>Bets on track</dt>
-      <dd>4<span class="sr"> of 6</span></dd>
+      <dd>3<span class="sr"> of 6</span></dd>
       <span class="note">of 6 documented</span>
     </div>
     <div class="metric is-flag">
       <dt>Drift flagged</dt>
-      <dd>2</dd>
-      <span class="note">1 high confidence</span>
+      <dd>3</dd>
+      <span class="note">2 high confidence</span>
     </div>
     <div class="metric is-flag">
       <dt>Contradicted</dt>
@@ -273,22 +266,10 @@
     </div>
     <div class="metric">
       <dt>Sources read</dt>
-      <dd>47</dd>
+      <dd>51</dd>
       <span class="note">issues, docs, calls</span>
     </div>
   </dl>
-
-  <section aria-labelledby="s0" class="corrections">
-    <div class="sec-head"><span class="sec-num">00</span><h2 id="s0">Corrections from last week</h2></div>
-    <div class="correction-card">
-      <span class="correction-check" aria-hidden="true">&#10003;</span>
-      <div>
-        <p class="correction-old" data-pretext><del>B5 says no report builder. A quarter of the week built one.</del></p>
-        <p class="correction-new" data-pretext>Not drift — bet B5 was consciously changed. Logged as a decision, Jul 28.</p>
-        <a class="correction-src" href="report-1/">see this flagged in report #1 →</a>
-      </div>
-    </div>
-  </section>
 
   <section aria-labelledby="s1">
     <div class="sec-head"><span class="sec-num">01</span><h2 id="s1">What the documented bets are</h2></div>
@@ -378,11 +359,26 @@
 
   <section aria-labelledby="s3">
     <div class="sec-head"><span class="sec-num">03</span><h2 id="s3">Where those two disagree</h2></div>
-    <p class="sec-note">Two drifts, ranked by what they cost, and one correction from last week. Every line is traceable to a source above.</p>
+    <p class="sec-note">Three drifts, ranked by what they cost. Every line is traceable to a source above.</p>
+
+    <article class="finding">
+      <div class="finding-top">
+        <span class="finding-num">Drift 01</span>
+        <span class="conf">confidence <b>high</b></span>
+      </div>
+      <h3 data-pretext>A documented bet says no report builder. A quarter of the week built one.</h3>
+      <p class="finding-body" data-pretext>B5 has said no custom report builder since February and was reaffirmed in May. KES-2841 shipped a column picker on Thursday, which is the first component of one, and the pull request calls it a report builder by name. Nobody appears to have reopened B5 before the work started.</p>
+      <ul class="evidence">
+        <li><span class="src">bet</span><span>B5 · Roadmap RFC #48 · Feb 9, reaffirmed May 20</span></li>
+        <li><span class="src">shipped</span><span>KES-2841 · merged Thu · 8 pts · PR "report builder: column picker v1"</span></li>
+        <li><span class="src">absent</span><span>no RFC amendment, no decision log entry, no Slack thread</span></li>
+      </ul>
+      <p class="cost"><span class="label">cost</span><span>8 of 34 points, 24% of the week, spent against an explicit written no-build.</span></p>
+    </article>
 
     <article class="finding is-contradiction">
       <div class="finding-top">
-        <span class="finding-num">Drift 01 · contradicted decision</span>
+        <span class="finding-num">Drift 02 · contradicted decision</span>
         <span class="conf">confidence <b>high</b></span>
       </div>
       <h3 data-pretext>Tuesday's decision reversed the board deck four hours after a customer said the opposite.</h3>
@@ -398,7 +394,7 @@
 
     <article class="finding is-medium">
       <div class="finding-top">
-        <span class="finding-num">Drift 02</span>
+        <span class="finding-num">Drift 03</span>
         <span class="conf">confidence <b>medium</b></span>
       </div>
       <h3 data-pretext>"Maintain, do not invest" has been three consecutive investment weeks.</h3>
@@ -417,7 +413,7 @@
       <div><b>Not read</b>#design, direct messages, Figma comments, the board deck appendix. Drift in those surfaces would not appear here.</div>
     </div>
     <p class="correction"><b>Corrections:</b> reply to this email. "Not drift, we changed that bet" is logged as a decision with today's date, and the bet updates in place. Next report reflects it.</p>
-    <p class="stamp">Generated Mon Aug 3, 06:00 · 6 bets, 47 sources, 2 findings, 1 correction · every claim above links to a source</p>
+    <p class="stamp">Generated Mon Jul 27, 06:00 · 6 bets, 51 sources, 3 findings · every claim above links to a source</p>
   </footer>
 
 </div>
@@ -512,339 +508,5 @@ var x0=["BN","BN","BN","BN","BN","BN","BN","BN","BN","S","B","S","WS","B","BN","
     });
 })();
 </script>
-<script>
-var TOUR = {
- "id": "report",
- "opener": {
-  "title": "You're looking at a sample drift report.",
-  "body": "<b>Kestrel is a fictional B2B expense platform</b> and Dana Okonkwo is its fictional Head of Product, so nothing confidential is on screen. The structure, the citations and the tone are exactly what ships. Two minutes, six stops."
- },
- "tracks": {
-  "investor": [
-   {
-    "sel": ".masthead",
-    "title": "This is the product, not a picture of it",
-    "body": "Everything below is one week of output: what the team said it would do, what it actually did, and where those disagree. <b>The whole company exists to produce this one artifact</b> — there is no dashboard behind it and nothing to log into."
-   },
-   {
-    "sel": ".strip",
-    "title": "The five-second read",
-    "body": "A Head of Product scans this before their Monday leadership sync. <b>Two of the four numbers are red on purpose.</b> A report that only ever shows green stops getting opened by week three."
-   },
-   {
-    "sel": ".corrections",
-    "title": "This is the moat",
-    "body": "Last week the report flagged the team for building against a written no-build bet. Dana replied “not drift — we changed that bet.” That reply became a tagged decision, the bet updated, and <b>it will never be flagged again.</b> A competitor she'd switch to has none of this accumulated history. The link checks that claim against last week's actual report."
-   },
-   {
-    "sel": ".bets",
-    "title": "Where the intent comes from",
-    "body": "Six bets, each tagged by how well evidenced it is — documented, verbal, hunch. <b>B3 is the interesting one:</b> said out loud in a leadership sync, never written down. A team can't be held to intent nobody recorded, and naming that gap is half of what the customer pays for."
-   },
-   {
-    "sel": ".finding.is-contradiction",
-    "title": "Why it gets forwarded",
-    "body": "Every finding carries its sources — the bet, the shipped issue, the customer call that contradicted it, with timestamps. This is what survives a CEO asking “says who?” <b>The forward is the metric we're testing.</b> A compliment is not a forward."
-   },
-   {
-    "sel": "footer .sources",
-    "title": "The part that buys trust",
-    "body": "The report states what it <b>didn't</b> read. A tool that implies total coverage gets caught being wrong once and is never opened again. Naming the blind spots is what makes the rest of the page credible."
-   }
-  ],
-  "operator": [
-   {
-    "sel": ".masthead",
-    "title": "What lands in your inbox at 6am Monday",
-    "body": "Kestrel is fictional so you can read this without your own data on screen. Point it at your Linear, your bets doc and your last three call recordings and <b>this is the shape of what you'd get</b> — same length, same tone, same citations."
-   },
-   {
-    "sel": ".strip",
-    "title": "Your week before your first coffee",
-    "body": "Bets on track, drift flagged, decisions contradicted, sources read. <b>If nothing drifted this is a ten-second read</b> and you close the tab. The weeks it isn't are the weeks it earns its keep."
-   },
-   {
-    "sel": ".corrections",
-    "title": "You're allowed to disagree with it",
-    "body": "Last week this flagged work that broke a documented bet. You replied “not drift — we changed that bet on purpose.” It's closed now, the bet is updated, and <b>it won't come back.</b> You correct it once; you don't re-argue with it every Monday."
-   },
-   {
-    "sel": ".bets",
-    "title": "Your bets, and how solid each one is",
-    "body": "Pulled from your strategy doc, board deck and RFCs. <b>B3 is tagged verbal</b> — you said it in a leadership sync and nobody wrote it down. That's the one that bites you in a QBR, and it's surfaced before it does."
-   },
-   {
-    "sel": ".finding.is-contradiction",
-    "title": "The finding you'd actually want",
-    "body": "A Slack decision at 14:20 that reversed the board deck, four hours after a customer named the opposite problem on a call. <b>Nobody was hiding anything</b> — it happened in a thread nobody re-read. Every claim links to its source so you can check it before you raise it."
-   },
-   {
-    "sel": "footer .sources",
-    "title": "Know the edges",
-    "body": "DMs, the design channel, the board deck appendix — not read. <b>Drift in those places will not show up here.</b> You should know what it looked at before you rely on it in a room."
-   }
-  ]
- }
-};
-</script>
-<style>
-  /* ---------- guided tour (web only; never part of the emailed artifact) ---------- */
-  .tour-block{position:fixed; inset:0; z-index:39; display:none}
-  .tour-block.on{display:block}
-  .tour-spot{
-    position:fixed; z-index:41; border-radius:6px; border:1px solid var(--accent);
-    box-shadow:0 0 0 9999px rgba(7,10,17,.88); pointer-events:none; opacity:0;
-    transition:opacity .18s ease, top .28s ease, left .28s ease, width .28s ease, height .28s ease;
-  }
-  .tour-spot.on{opacity:1}
-  .tour-card{
-    position:fixed; z-index:42; width:min(390px, calc(100vw - 32px));
-    background:var(--surface-2); border:1px solid var(--border); border-radius:8px;
-    padding:var(--s4); opacity:0; pointer-events:none;
-    transition:opacity .18s ease, top .28s ease, left .28s ease;
-  }
-  .tour-card.on{opacity:1; pointer-events:auto}
-  .tour-step{
-    font:500 10px/1 var(--mono); letter-spacing:.12em; text-transform:uppercase;
-    color:var(--accent); margin:0 0 var(--s2);
-  }
-  .tour-card h4{font:600 15px/1.35 var(--ui); margin:0 0 var(--s2); letter-spacing:-0.01em; color:var(--text)}
-  .tour-card p{font:400 13px/1.6 var(--ui); color:var(--muted); margin:0 0 var(--s4); max-width:none}
-  .tour-card p b{color:var(--text); font-weight:500}
-  .tour-acts{display:flex; align-items:center; gap:var(--s2)}
-  .tour-acts .sp{flex:1}
-  .tour-btn{
-    font:500 12px/1 var(--ui); padding:8px 12px; border-radius:4px; cursor:pointer;
-    border:1px solid var(--border); background:var(--surface); color:var(--text);
-  }
-  .tour-btn:hover{border-color:var(--muted)}
-  .tour-btn.go{background:var(--accent); border-color:var(--accent); color:#052112; font-weight:600}
-  .tour-btn.go:hover{filter:brightness(1.06)}
-  .tour-btn.qt{background:transparent; border-color:transparent; color:var(--muted); padding:8px 4px}
-  .tour-btn.qt:hover{color:var(--text)}
-
-  /* opener */
-  .tour-open{
-    position:fixed; inset:0; z-index:45; display:none; align-items:center; justify-content:center;
-    padding:var(--s4); background:rgba(7,10,17,.9);
-  }
-  .tour-open.on{display:flex}
-  .tour-open-in{
-    max-width:520px; width:100%; background:var(--surface); border:1px solid var(--border);
-    border-radius:10px; padding:var(--s8);
-  }
-  .tour-open-in .k{
-    font:500 11px/1 var(--mono); letter-spacing:.14em; text-transform:uppercase;
-    color:var(--accent); display:flex; align-items:center; gap:var(--s2); margin:0 0 var(--s4);
-  }
-  .tour-open-in .k .dot{width:6px; height:6px; border-radius:50%; background:var(--accent)}
-  .tour-open-in h3{font:600 22px/1.25 var(--ui); margin:0 0 var(--s3); letter-spacing:-0.02em; color:var(--text)}
-  .tour-open-in p{font-size:14px; color:var(--muted); margin:0 0 var(--s6); max-width:none}
-  .tour-open-in p b{color:var(--text); font-weight:500}
-  .tour-picks{display:grid; gap:var(--s2)}
-  .tour-pick{
-    display:block; width:100%; text-align:left; cursor:pointer;
-    background:var(--surface-2); border:1px solid var(--border); border-radius:6px;
-    padding:var(--s3) var(--s4); color:var(--text); font:inherit;
-  }
-  .tour-pick:hover{border-color:var(--accent)}
-  .tour-pick b{display:block; font:600 14px/1.4 var(--ui); margin-bottom:2px}
-  .tour-pick span{font:400 12px/1.5 var(--ui); color:var(--muted)}
-
-  /* replay */
-  .tour-replay{
-    position:fixed; left:var(--s4); bottom:var(--s4); z-index:30; cursor:pointer;
-    font:500 11px/1 var(--mono); letter-spacing:.06em; padding:9px 12px; border-radius:5px;
-    border:1px solid var(--border); background:var(--surface); color:var(--muted);
-  }
-  .tour-replay:hover{color:var(--accent); border-color:var(--accent)}
-
-  @media print{ .tour-block,.tour-spot,.tour-card,.tour-open,.tour-replay{display:none !important} }
-  @media (max-width:768px){
-    .tour-card{width:calc(100vw - 24px)}
-    .tour-replay{left:12px; bottom:12px}
-  }
-  @media (prefers-reduced-motion:reduce){
-    .tour-spot,.tour-card{transition:opacity .12s ease}
-  }
-</style>
-
-<div class="tour-block" id="tourBlock"></div>
-<div class="tour-spot" id="tourSpot"></div>
-<div class="tour-card" id="tourCard" role="dialog" aria-live="polite" aria-label="Guided walkthrough">
-  <p class="tour-step" id="tourStep">1 / 6</p>
-  <h4 id="tourTitle"></h4>
-  <p id="tourBody"></p>
-  <div class="tour-acts">
-    <button type="button" class="tour-btn qt" id="tourQuit">Close</button>
-    <span class="sp"></span>
-    <button type="button" class="tour-btn" id="tourBack">Back</button>
-    <button type="button" class="tour-btn go" id="tourNext">Next</button>
-  </div>
-</div>
-
-<div class="tour-open" id="tourOpen">
-  <div class="tour-open-in">
-    <p class="k"><span class="dot" aria-hidden="true"></span>Sample · not a live customer</p>
-    <h3 id="tourOpenTitle"></h3>
-    <p id="tourOpenBody"></p>
-    <div class="tour-picks">
-      <button type="button" class="tour-pick" data-track="investor">
-        <b>I'm an investor</b><span>What to notice about the business behind this artifact</span>
-      </button>
-      <button type="button" class="tour-pick" data-track="operator">
-        <b>I'm a product leader</b><span>What this would tell you about your own team</span>
-      </button>
-      <button type="button" class="tour-pick" data-track="skip">
-        <b>Skip — let me just read it</b><span>You can reopen the walkthrough any time</span>
-      </button>
-    </div>
-  </div>
-</div>
-
-<button type="button" class="tour-replay" id="tourReplay">? What am I looking at</button>
-
-<script>
-(function(){
-  "use strict";
-  var SEEN = "pmos-tour-seen-" + (TOUR.id || "x"), TRACK = "pmos-tour-track";
-  function get(k){ try { return localStorage.getItem(k); } catch(e){ return null; } }
-  function set(k,v){ try { localStorage.setItem(k,v); } catch(e){} }
-
-  var block = document.getElementById("tourBlock"),
-      spot  = document.getElementById("tourSpot"),
-      card  = document.getElementById("tourCard"),
-      open  = document.getElementById("tourOpen");
-
-  var elStep = document.getElementById("tourStep"),
-      elTitle= document.getElementById("tourTitle"),
-      elBody = document.getElementById("tourBody"),
-      btnBack= document.getElementById("tourBack"),
-      btnNext= document.getElementById("tourNext");
-
-  document.getElementById("tourOpenTitle").textContent = TOUR.opener.title;
-  document.getElementById("tourOpenBody").innerHTML   = TOUR.opener.body;
-
-  var steps = [], i = 0, live = false;
-
-  function reduced(){
-    return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  }
-
-  // Scroll can be smooth; measure only once it has actually settled, otherwise the
-  // spotlight lands on wherever the page was mid-flight.
-  function settle(cb){
-    if (reduced()) { cb(); return; }
-    var last = -1, same = 0, t0 = Date.now();
-    (function poll(){
-      var y = Math.round(window.scrollY);
-      if (y === last) { same++; } else { same = 0; last = y; }
-      if (same >= 2 || Date.now() - t0 > 650) { cb(); return; }
-      requestAnimationFrame(poll);
-    })();
-  }
-
-  function place(el){
-    var r = el.getBoundingClientRect(), pad = 8;
-    var top = Math.max(6, r.top - pad), left = Math.max(6, r.left - pad);
-    var w = Math.min(r.width + pad * 2, window.innerWidth - 12);
-    var h = r.height + pad * 2;
-    spot.style.top = top + "px"; spot.style.left = left + "px";
-    spot.style.width = w + "px"; spot.style.height = h + "px";
-
-    var ch = card.offsetHeight || 200, cw = card.offsetWidth || 390, gap = 12;
-    var below = top + h + gap, ctop;
-    if (below + ch <= window.innerHeight - 8) ctop = below;
-    else if (top - gap - ch >= 8) ctop = top - gap - ch;
-    else ctop = Math.max(8, window.innerHeight - ch - 8);
-    var cleft = Math.min(Math.max(8, left), window.innerWidth - cw - 8);
-    card.style.top = ctop + "px"; card.style.left = cleft + "px";
-  }
-
-  function show(n){
-    i = Math.max(0, Math.min(steps.length - 1, n));
-    var s = steps[i];
-    // Some targets live in a wizard pane that is display:none until selected;
-    // an unmeasurable target would put the spotlight at 0,0.
-    if (typeof s.go === "number" && typeof window.goTo === "function") {
-      try { window.goTo(s.go); } catch (e) {}
-    }
-    var el = document.querySelector(s.sel);
-    if (!el) { if (i < steps.length - 1) { show(i + 1); } else { stop(); } return; }
-
-    elStep.textContent = (i + 1) + " / " + steps.length;
-    elTitle.textContent = s.title;
-    elBody.innerHTML = s.body;
-    btnBack.style.visibility = i === 0 ? "hidden" : "visible";
-    btnNext.textContent = i === steps.length - 1 ? "Done" : "Next";
-
-    el.scrollIntoView({ behavior: reduced() ? "auto" : "smooth", block: "center" });
-    settle(function(){ place(el); spot.classList.add("on"); card.classList.add("on"); });
-  }
-
-  function start(track){
-    steps = TOUR.tracks[track] || TOUR.tracks.operator;
-    live = true;
-    block.classList.add("on");
-    show(0);
-  }
-
-  function stop(){
-    live = false;
-    spot.classList.remove("on"); card.classList.remove("on");
-    block.classList.remove("on"); open.classList.remove("on");
-    set(SEEN, "1");
-    // Leave the page as the reader found it, not parked mid-wizard.
-    if (typeof TOUR.onStop === "function") { try { TOUR.onStop(); } catch (e) {} }
-  }
-
-  function ask(){
-    var t = get(TRACK);
-    if (t === "investor" || t === "operator") { start(t); return; }
-    open.classList.add("on");
-  }
-
-  Array.prototype.forEach.call(open.querySelectorAll(".tour-pick"), function(b){
-    b.addEventListener("click", function(){
-      var t = b.getAttribute("data-track");
-      open.classList.remove("on");
-      if (t === "skip") { set(SEEN, "1"); return; }
-      set(TRACK, t); start(t);
-    });
-  });
-
-  btnNext.addEventListener("click", function(){ i === steps.length - 1 ? stop() : show(i + 1); });
-  btnBack.addEventListener("click", function(){ show(i - 1); });
-  document.getElementById("tourQuit").addEventListener("click", stop);
-
-  document.getElementById("tourReplay").addEventListener("click", function(){
-    if (live) { stop(); return; }
-    open.classList.add("on");
-  });
-
-  document.addEventListener("keydown", function(e){
-    if (open.classList.contains("on") && e.key === "Escape") { open.classList.remove("on"); set(SEEN,"1"); return; }
-    if (!live) return;
-    if (e.key === "Escape") { e.preventDefault(); stop(); }
-    else if (e.key === "ArrowRight") { e.preventDefault(); i === steps.length - 1 ? stop() : show(i + 1); }
-    else if (e.key === "ArrowLeft") { e.preventDefault(); show(i - 1); }
-  });
-
-  var rt;
-  window.addEventListener("resize", function(){
-    if (!live) return;
-    clearTimeout(rt);
-    rt = setTimeout(function(){
-      var el = document.querySelector(steps[i].sel);
-      if (el) place(el);
-    }, 120);
-  });
-
-  // Fonts shift layout; measuring before they resolve puts the spotlight in the wrong place.
-  (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve())
-    .then(function(){ if (!get(SEEN)) setTimeout(ask, 400); });
-})();
-</script>
-
 </body>
 </html>
