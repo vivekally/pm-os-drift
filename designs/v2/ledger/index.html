@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kestrel · Commitment Ledger</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#070A11; --surface:#0F1420; --surface-2:#141B29; --border:#1E2D45;
+    --accent:#3DDC84; --code:#7FE8B0; --text:#E2E8F0; --muted:#64748B;
+    --doc:#7FE8B0; --verbal:#5BC0EB; --hunch:#C9A227; --industry:#8A93A6;
+    --drift:#FF6B5B; --drift-soft:#8C4A45;
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s6:24px; --s8:32px; --s12:48px;
+    --ui:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; background:var(--bg); color:var(--text);
+    font:400 15px/1.6 var(--ui); letter-spacing:-0.005em; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:880px; margin:0 auto; padding:calc(var(--s8) + 40px) var(--s6) var(--s12)}
+
+  /* ---------- nav ---------- */
+  .nav-link{
+    position:fixed; top:var(--s4); z-index:20;
+    font:500 11px/1 var(--mono); letter-spacing:.08em; text-transform:uppercase;
+    color:var(--muted); text-decoration:none; padding:6px 10px;
+    border:1px solid var(--border); border-radius:4px; background:var(--surface);
+  }
+  .nav-link:hover{color:var(--accent); border-color:var(--accent)}
+  .nav-l{left:var(--s4)} .nav-r{right:var(--s4)}
+  @media (max-width:768px){
+    .nav-link{position:static; display:inline-block; margin:0 var(--s2) var(--s3) 0}
+    .wrap{padding-top:var(--s6)}
+  }
+
+  /* ---------- masthead ---------- */
+  .masthead{border-bottom:1px solid var(--border); padding-bottom:var(--s6); margin-bottom:var(--s6)}
+  .kicker{
+    font:500 11px/1 var(--mono); letter-spacing:.14em; text-transform:uppercase;
+    color:var(--muted); display:flex; align-items:center; gap:var(--s2); margin:0 0 var(--s4);
+  }
+  .kicker .dot{width:6px; height:6px; border-radius:50%; background:var(--accent); flex:none}
+  h1{font:600 27px/1.25 var(--ui); margin:0 0 var(--s3); letter-spacing:-0.02em}
+  .subject{color:var(--muted); font-size:14px; margin:0}
+  .subject b{color:var(--text); font-weight:500}
+  .period{font-family:var(--mono); font-size:13px; color:var(--code)}
+
+  /* ---------- strip ---------- */
+  .strip{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:1px;
+    background:var(--border); border:1px solid var(--border); border-radius:4px;
+    overflow:hidden; margin:0 0 var(--s8);
+  }
+  .metric{background:var(--surface); padding:var(--s4)}
+  .metric dt{
+    font:500 10px/1.3 var(--mono); letter-spacing:.1em; text-transform:uppercase;
+    color:var(--muted); margin:0 0 var(--s2);
+  }
+  .metric dd{
+    font:500 25px/1 var(--mono); font-variant-numeric:tabular-nums;
+    margin:0 0 var(--s1); letter-spacing:-0.02em;
+  }
+  .metric .note{font:400 11px/1.4 var(--ui); color:var(--muted); display:block}
+  .metric.is-ok dd{color:var(--accent)}
+  .metric.is-todo dd{color:var(--hunch)}
+
+  /* ---------- sections ---------- */
+  section{margin:0 0 var(--s12)}
+  .sec-head{display:flex; align-items:baseline; gap:var(--s3); margin:0 0 var(--s2)}
+  .sec-num{font:500 12px/1 var(--mono); color:var(--accent); letter-spacing:.08em; flex:none}
+  h2{font:600 17px/1.3 var(--ui); margin:0; letter-spacing:-0.01em}
+  .sec-note{font-size:13px; color:var(--muted); margin:0 0 var(--s4)}
+
+  /* ---------- commitment rows ---------- */
+  .items{list-style:none; margin:0; padding:0}
+  .item{
+    background:var(--surface); border:1px solid var(--border); border-radius:6px;
+    padding:var(--s4); margin:0 0 var(--s3);
+  }
+  .item.is-proposed{background:transparent; border-style:dashed}
+  .item.is-changed{border-left:3px solid var(--accent)}
+  .item-top{display:flex; align-items:flex-start; gap:var(--s3); margin:0 0 var(--s2)}
+  .item-id{font:500 12px/1.6 var(--mono); color:var(--muted); flex:none; min-width:26px}
+  .item-claim{margin:0; font-size:14px; color:var(--text); flex:1}
+  .item.is-proposed .item-claim{color:var(--text)}
+  .item-cite{
+    display:block; margin-top:var(--s2); font:400 11px/1.5 var(--mono); color:var(--muted);
+  }
+  .pill{
+    font:500 10px/1 var(--mono); letter-spacing:.08em; text-transform:uppercase;
+    padding:4px 6px; border-radius:2px; white-space:nowrap; flex:none;
+    border:1px solid currentColor;
+  }
+  .pill.documented{color:var(--doc)}
+  .pill.verbal{color:var(--verbal)}
+  .pill.hunch{color:var(--hunch)}
+  .pill.industry{color:var(--industry)}
+
+  /* actions: the whole point of the screen */
+  .acts{display:flex; flex-wrap:wrap; gap:var(--s2); margin-top:var(--s3); padding-top:var(--s3); border-top:1px solid var(--border)}
+  .act{
+    font:500 11px/1 var(--mono); letter-spacing:.04em; padding:7px 10px; border-radius:4px;
+    border:1px solid var(--border); background:var(--surface-2); color:var(--text); cursor:pointer;
+  }
+  .act:hover{border-color:var(--muted)}
+  .act.yes{color:var(--accent)} .act.yes:hover{border-color:var(--accent)}
+  .act.no{color:var(--drift)} .act.no:hover{border-color:var(--drift)}
+  .act .sp{flex:1}
+  .acts .spacer{flex:1}
+  .resolved{
+    font:500 11px/1 var(--mono); letter-spacing:.04em; color:var(--accent);
+    display:flex; align-items:center; gap:var(--s2); padding:7px 0;
+  }
+  .resolved.no{color:var(--muted)}
+
+  .edit-box{display:none; margin-top:var(--s3)}
+  .edit-box.on{display:block}
+  .edit-box textarea{
+    width:100%; min-height:64px; background:var(--bg); color:var(--text);
+    border:1px solid var(--accent); border-radius:4px; padding:var(--s3);
+    font:400 14px/1.6 var(--ui); resize:vertical;
+  }
+  .edit-box textarea:focus{outline:none}
+
+  /* ---------- empty state ---------- */
+  .empty{
+    border:1px dashed var(--border); border-radius:6px; padding:var(--s6);
+    text-align:center; color:var(--muted); font-size:13px; display:none;
+  }
+  .empty.on{display:block}
+
+  /* ---------- footer ---------- */
+  footer{border-top:1px solid var(--border); padding-top:var(--s6); margin-top:var(--s12)}
+  .sources{display:grid; grid-template-columns:repeat(2,1fr); gap:var(--s3) var(--s6); margin:0 0 var(--s6)}
+  .sources div{font:400 12px/1.6 var(--mono); color:var(--muted)}
+  .sources b{color:var(--text); font-weight:500; display:block; margin-bottom:2px}
+  .stamp{font:400 11px/1.6 var(--mono); color:var(--muted); margin:var(--s6) 0 0; padding-top:var(--s4); border-top:1px solid var(--border)}
+
+  :focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:2px}
+  .sr{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap}
+
+  @media (max-width:768px){
+    .strip{grid-template-columns:repeat(2,1fr)}
+    h1{font-size:23px}
+    .sources{grid-template-columns:1fr}
+    .item-top{flex-wrap:wrap}
+  }
+  @media (prefers-reduced-motion:reduce){ *{transition:none !important} }
+</style>
+</head>
+<body>
+<a class="nav-link nav-l" href="../">← This week's report</a>
+<a class="nav-link nav-r" href="../setup/">Sources →</a>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="kicker"><span class="dot" aria-hidden="true"></span>PM OS · Commitment Ledger</p>
+    <h1 data-live-head>Four things look like commitments. Confirm the ones that are.</h1>
+    <p class="subject">
+      <b>Kestrel</b> · maintained for Dana Okonkwo, Head of Product ·
+      <span class="period">as of Aug 3, 2026</span>
+    </p>
+  </header>
+
+  <dl class="strip" aria-label="Ledger summary">
+    <div class="metric is-ok">
+      <dt>Confirmed</dt>
+      <dd id="mConfirmed">3</dd>
+      <span class="note">you verified these</span>
+    </div>
+    <div class="metric is-todo">
+      <dt>Needs review</dt>
+      <dd id="mProposed">4</dd>
+      <span class="note">we inferred, you decide</span>
+    </div>
+    <div class="metric">
+      <dt>Corrected</dt>
+      <dd id="mCorrected">1</dd>
+      <span class="note">changed in last 30 days</span>
+    </div>
+    <div class="metric">
+      <dt>Sources read</dt>
+      <dd>47</dd>
+      <span class="note">issues, docs, calls</span>
+    </div>
+  </dl>
+
+  <section aria-labelledby="s1">
+    <div class="sec-head"><span class="sec-num">01</span><h2 id="s1">Needs your review</h2></div>
+    <p class="sec-note">We found these in decisions, threads and calls. Nothing here is used in a drift report until you confirm it, so an incorrect guess costs you one click and never resurfaces.</p>
+
+    <ul class="items" id="proposedList">
+      <li class="item is-proposed" data-item>
+        <div class="item-top">
+          <span class="item-id">P1</span>
+          <p class="item-claim">Vantage Corp drives the Q4 roadmap. Their requirements take precedence over the activation work.</p>
+          <span class="pill verbal">verbal</span>
+        </div>
+        <span class="item-cite">#product · Tue Jul 28, 14:20 · 3 approvals, no dissent · never written elsewhere</span>
+        <div class="acts">
+          <button type="button" class="act yes" data-act="confirm">Yes, that's a commitment</button>
+          <button type="button" class="act" data-act="edit">Not quite, let me fix it</button>
+          <button type="button" class="act no" data-act="reject">Not a commitment</button>
+        </div>
+        <div class="edit-box"><textarea aria-label="Correct this commitment">Vantage Corp drives the Q4 roadmap. Their requirements take precedence over the activation work.</textarea></div>
+      </li>
+
+      <li class="item is-proposed" data-item>
+        <div class="item-top">
+          <span class="item-id">P2</span>
+          <p class="item-claim">Mobile receipt capture is table stakes. Maintain it, do not invest further.</p>
+          <span class="pill verbal">verbal</span>
+        </div>
+        <span class="item-cite">Leadership sync · May 2 · said aloud, never written down · 16 pts shipped against it since</span>
+        <div class="acts">
+          <button type="button" class="act yes" data-act="confirm">Yes, that's a commitment</button>
+          <button type="button" class="act" data-act="edit">Not quite, let me fix it</button>
+          <button type="button" class="act no" data-act="reject">Not a commitment</button>
+        </div>
+        <div class="edit-box"><textarea aria-label="Correct this commitment">Mobile receipt capture is table stakes. Maintain it, do not invest further.</textarea></div>
+      </li>
+
+      <li class="item is-proposed" data-item>
+        <div class="item-top">
+          <span class="item-id">P3</span>
+          <p class="item-claim">Seat-based pricing holds through FY27.</p>
+          <span class="pill hunch">hunch</span>
+        </div>
+        <span class="item-cite">1:1 note · Jun 3 · phrased as "I think" · no supporting analysis found</span>
+        <div class="acts">
+          <button type="button" class="act yes" data-act="confirm">Yes, that's a commitment</button>
+          <button type="button" class="act" data-act="edit">Not quite, let me fix it</button>
+          <button type="button" class="act no" data-act="reject">Not a commitment</button>
+        </div>
+        <div class="edit-box"><textarea aria-label="Correct this commitment">Seat-based pricing holds through FY27.</textarea></div>
+      </li>
+
+      <li class="item is-proposed" data-item>
+        <div class="item-top">
+          <span class="item-id">P4</span>
+          <p class="item-claim">Approval workflows are the wedge into finance teams.</p>
+          <span class="pill documented">documented</span>
+        </div>
+        <span class="item-cite">Q3 Strategy · Notion · updated Apr 14 · not referenced in any sprint since</span>
+        <div class="acts">
+          <button type="button" class="act yes" data-act="confirm">Yes, that's a commitment</button>
+          <button type="button" class="act" data-act="edit">Not quite, let me fix it</button>
+          <button type="button" class="act no" data-act="reject">Not a commitment</button>
+        </div>
+        <div class="edit-box"><textarea aria-label="Correct this commitment">Approval workflows are the wedge into finance teams.</textarea></div>
+      </li>
+    </ul>
+    <p class="empty" id="proposedEmpty">Nothing waiting. The next report runs against the confirmed ledger below.</p>
+  </section>
+
+  <section aria-labelledby="s2">
+    <div class="sec-head"><span class="sec-num">02</span><h2 id="s2">Confirmed</h2></div>
+    <p class="sec-note">What this week's drift report measures against. Each one was confirmed by you, which is why a finding against it is hard to argue with.</p>
+    <ul class="items" id="confirmedList">
+      <li class="item">
+        <div class="item-top">
+          <span class="item-id">B1</span>
+          <p class="item-claim">Self-serve activation is the FY27 growth lever. Target: 40% of new accounts reach a first synced expense inside 24 hours. Today it is 18%.</p>
+          <span class="pill documented">documented</span>
+        </div>
+        <span class="item-cite">Q3 Strategy · Notion · confirmed by you Jul 14</span>
+      </li>
+      <li class="item">
+        <div class="item-top">
+          <span class="item-id">B2</span>
+          <p class="item-claim">Mid-market, 100 to 500 seats, is the ICP. Enterprise custom work is deprioritized until activation lands.</p>
+          <span class="pill documented">documented</span>
+        </div>
+        <span class="item-cite">Board deck, slide 11 · confirmed by you Jul 14</span>
+      </li>
+      <li class="item is-changed">
+        <div class="item-top">
+          <span class="item-id">B5</span>
+          <p class="item-claim">A custom report builder is in scope for Q4, reversing the previous no-build position.</p>
+          <span class="pill documented">documented</span>
+        </div>
+        <span class="item-cite">changed by you Jul 28 · was "no custom report builder, ship six fixed reports" · Roadmap RFC #48</span>
+      </li>
+    </ul>
+  </section>
+
+  <footer>
+    <div class="sources">
+      <div><b>Read to build this</b>Linear · 34 issues, 14 closed<br>Notion · Q3 Strategy, Roadmap RFC #48<br>Slack · #product, #eng-releases, 412 msgs<br>Gong · 3 calls, 2h 51m</div>
+      <div><b>Not read</b>#design, direct messages, Figma comments, the board deck appendix. A commitment made only in those places will not appear here.</div>
+    </div>
+    <p class="stamp" id="stamp">Ledger rebuilt Mon Aug 3, 06:00 · 3 confirmed, 4 awaiting review · no strategy document was required to start</p>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var state = { confirmed: 3, proposed: 4, corrected: 1 };
+  var elC = document.getElementById("mConfirmed"),
+      elP = document.getElementById("mProposed"),
+      elX = document.getElementById("mCorrected"),
+      head = document.querySelector("[data-live-head]"),
+      list = document.getElementById("proposedList"),
+      empty = document.getElementById("proposedEmpty"),
+      stamp = document.getElementById("stamp");
+
+  function render(){
+    elC.textContent = state.confirmed;
+    elP.textContent = state.proposed;
+    elX.textContent = state.corrected;
+    empty.classList.toggle("on", state.proposed === 0);
+    stamp.textContent = "Ledger rebuilt Mon Aug 3, 06:00 · " + state.confirmed +
+      " confirmed, " + state.proposed + " awaiting review · no strategy document was required to start";
+    head.textContent = state.proposed === 0
+      ? "Ledger is current. Nothing waiting on you."
+      : state.proposed + (state.proposed === 1 ? " thing looks like a commitment. Confirm it if it is."
+                                               : " things look like commitments. Confirm the ones that are.");
+  }
+
+  // Replace the action row with a settled state, so the row reads as done
+  // rather than merely disappearing.
+  function settle(item, label, muted){
+    var acts = item.querySelector(".acts");
+    var box = item.querySelector(".edit-box");
+    if (box) box.classList.remove("on");
+    var done = document.createElement("p");
+    done.className = "resolved" + (muted ? " no" : "");
+    done.textContent = label;
+    acts.replaceWith(done);
+    item.classList.remove("is-proposed");
+    if (muted) item.style.opacity = ".55";
+  }
+
+  list.addEventListener("click", function(e){
+    var btn = e.target.closest("[data-act]");
+    if (!btn) return;
+    var item = btn.closest("[data-item]");
+    var act = btn.getAttribute("data-act");
+
+    if (act === "edit") {
+      var box = item.querySelector(".edit-box");
+      var open = box.classList.toggle("on");
+      btn.textContent = open ? "Save correction" : "Not quite, let me fix it";
+      btn.setAttribute("data-act", open ? "save" : "edit");
+      if (open) box.querySelector("textarea").focus();
+      return;
+    }
+
+    if (act === "save") {
+      var ta = item.querySelector(".edit-box textarea");
+      var v = ta.value.trim();
+      if (v) item.querySelector(".item-claim").textContent = v;
+      state.proposed--; state.confirmed++; state.corrected++;
+      settle(item, "✓ Corrected and confirmed. This is now what drift is measured against.", false);
+      render();
+      return;
+    }
+
+    if (act === "confirm") {
+      state.proposed--; state.confirmed++;
+      settle(item, "✓ Confirmed. This is now what drift is measured against.", false);
+      render();
+      return;
+    }
+
+    if (act === "reject") {
+      state.proposed--;
+      settle(item, "Dismissed. We will not raise this again.", true);
+      render();
+      return;
+    }
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
