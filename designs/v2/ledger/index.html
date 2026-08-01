@@ -152,11 +152,35 @@
     .item-top{flex-wrap:wrap}
   }
   @media (prefers-reduced-motion:reduce){ *{transition:none !important} }
+
+  /* ---------- prototype nav (shared across the three screens) ---------- */
+  .pnav{
+    position:fixed; top:0; left:0; right:0; z-index:30;
+    display:flex; align-items:center; gap:var(--s4);
+    padding:var(--s3) var(--s6);
+    background:rgba(7,10,17,.92); border-bottom:1px solid var(--border);
+    backdrop-filter:blur(6px);
+  }
+  .pnav a{
+    font:500 11px/1 var(--mono); letter-spacing:.08em; text-transform:uppercase;
+    color:var(--muted); text-decoration:none; padding:7px 9px; border-radius:4px;
+  }
+  .pnav a:hover{color:var(--text)}
+  .pnav .home{color:var(--text); border:1px solid var(--border); background:var(--surface)}
+  .pnav .home:hover{border-color:var(--accent); color:var(--accent)}
+  .pnav .sp{flex:1}
+  .pnav .set{display:flex; gap:var(--s1)}
+  .pnav .set a.is-current{color:var(--accent); background:var(--surface); border:1px solid var(--border)}
+  @media print{ .pnav{display:none} }
+  @media (max-width:768px){
+    .pnav{padding:var(--s2) var(--s3); gap:var(--s2)}
+    .pnav a{padding:6px 7px; letter-spacing:.04em}
+    .pnav .sp{flex:0}
+  }
 </style>
 </head>
 <body>
-<a class="nav-link nav-l" href="../">← This week's report</a>
-<a class="nav-link nav-r" href="../setup/">Sources →</a>
+<nav class="pnav" aria-label="Prototype"><a class="home" href="../">&larr; PM OS</a><span class="sp"></span><span class="set"><a href="../report/">Report</a><a href="../ledger/" class="is-current">Ledger</a><a href="../setup/">Sources</a></span></nav>
 
 <div class="wrap">
 

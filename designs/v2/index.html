@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Kestrel · Weekly Drift Report · Jul 28–Aug 3</title>
+<title>PM OS · Find out on Monday, not in the QBR</title>
+<meta name="description" content="PM OS reads where your product decisions actually happen, proposes what you have committed to, and tells you every week where the work diverged. No strategy document required.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -13,349 +14,294 @@
     --accent:#3DDC84; --code:#7FE8B0; --text:#E2E8F0; --muted:#64748B;
     --doc:#7FE8B0; --verbal:#5BC0EB; --hunch:#C9A227; --industry:#8A93A6;
     --drift:#FF6B5B; --drift-soft:#8C4A45;
-    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s6:24px; --s8:32px; --s12:48px;
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s6:24px; --s8:32px; --s12:48px; --s16:64px;
     --ui:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
     --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
   }
   *{box-sizing:border-box}
-  html{-webkit-text-size-adjust:100%}
+  html{-webkit-text-size-adjust:100%; scroll-behavior:smooth}
   body{
     margin:0; background:var(--bg); color:var(--text);
-    font:400 15px/1.6 var(--ui); letter-spacing:-0.005em; -webkit-font-smoothing:antialiased;
+    font:400 16px/1.65 var(--ui); letter-spacing:-0.005em; -webkit-font-smoothing:antialiased;
   }
-  .wrap{max-width:820px; margin:0 auto; padding:calc(var(--s8) + 40px) var(--s6) var(--s12)}
+  .wrap{max-width:900px; margin:0 auto; padding:0 var(--s6)}
+  section{padding:var(--s16) 0; border-top:1px solid var(--border)}
+  p{max-width:64ch}
 
-  .nav-link{
-    position:fixed; top:var(--s4); z-index:20;
-    font:500 11px/1 var(--mono); letter-spacing:.08em; text-transform:uppercase;
-    color:var(--muted); text-decoration:none; padding:6px 10px;
-    border:1px solid var(--border); border-radius:4px; background:var(--surface);
+  /* ---------- top bar ---------- */
+  .top{
+    position:sticky; top:0; z-index:30; background:rgba(7,10,17,.9);
+    border-bottom:1px solid var(--border); backdrop-filter:blur(6px);
   }
-  .nav-link:hover{color:var(--accent); border-color:var(--accent)}
-  .nav-l{left:var(--s4)} .nav-r{right:var(--s4)}
-  @media print{ .nav-link{display:none} }
-  @media (max-width:768px){
-    .nav-link{position:static; display:inline-block; margin:0 var(--s2) var(--s3) 0}
-    .wrap{padding-top:var(--s6)}
+  .top-in{
+    max-width:900px; margin:0 auto; padding:var(--s3) var(--s6);
+    display:flex; align-items:center; gap:var(--s4);
   }
+  .brand{
+    font:500 12px/1 var(--mono); letter-spacing:.16em; text-transform:uppercase;
+    color:var(--text); display:flex; align-items:center; gap:var(--s2); text-decoration:none;
+  }
+  .brand .dot{width:7px; height:7px; border-radius:50%; background:var(--accent)}
+  .top .sp{flex:1}
+  .top-cta{
+    font:600 12px/1 var(--ui); padding:9px 13px; border-radius:5px;
+    background:var(--accent); color:#052112; text-decoration:none; white-space:nowrap;
+  }
+  .top-cta:hover{filter:brightness(1.06)}
 
-  .masthead{border-bottom:1px solid var(--border); padding-bottom:var(--s6); margin-bottom:var(--s6)}
+  /* ---------- hero ---------- */
+  .hero{padding:var(--s16) 0 var(--s12); border-top:none}
   .kicker{
     font:500 11px/1 var(--mono); letter-spacing:.14em; text-transform:uppercase;
-    color:var(--muted); display:flex; align-items:center; gap:var(--s2); margin:0 0 var(--s4);
+    color:var(--muted); display:flex; align-items:center; gap:var(--s2); margin:0 0 var(--s6);
   }
-  .kicker .dot{width:6px; height:6px; border-radius:50%; background:var(--accent); flex:none}
-  h1{font:600 27px/1.25 var(--ui); margin:0 0 var(--s3); letter-spacing:-0.02em}
-  .subject{color:var(--muted); font-size:14px; margin:0}
-  .subject b{color:var(--text); font-weight:500}
-  .period{font-family:var(--mono); font-size:13px; color:var(--code)}
+  .kicker .dot{width:6px; height:6px; border-radius:50%; background:var(--accent)}
+  h1{font:600 46px/1.14 var(--ui); margin:0 0 var(--s6); letter-spacing:-0.03em; max-width:19ch}
+  .sub{font-size:19px; color:var(--muted); max-width:60ch; margin:0 0 var(--s8); line-height:1.6}
+  .sub b{color:var(--text); font-weight:500}
+  .cta-row{display:flex; flex-wrap:wrap; gap:var(--s3); align-items:center}
+  .btn{
+    font:600 14px/1 var(--ui); padding:14px 20px; border-radius:6px;
+    background:var(--accent); color:#052112; text-decoration:none; border:1px solid var(--accent);
+    display:inline-block;
+  }
+  .btn:hover{filter:brightness(1.06)}
+  .btn-ghost{background:transparent; color:var(--text); border-color:var(--border); font-weight:500}
+  .btn-ghost:hover{border-color:var(--muted)}
+  .cta-note{font:400 12px/1.6 var(--mono); color:var(--muted); margin:var(--s4) 0 0}
 
-  .strip{
-    display:grid; grid-template-columns:repeat(4,1fr); gap:1px;
-    background:var(--border); border:1px solid var(--border); border-radius:4px;
-    overflow:hidden; margin:0 0 var(--s8);
-  }
-  .metric{background:var(--surface); padding:var(--s4)}
-  .metric dt{
-    font:500 10px/1.3 var(--mono); letter-spacing:.1em; text-transform:uppercase;
-    color:var(--muted); margin:0 0 var(--s2);
-  }
-  .metric dd{
-    font:500 25px/1 var(--mono); font-variant-numeric:tabular-nums;
-    margin:0 0 var(--s1); letter-spacing:-0.02em;
-  }
-  .metric .note{font:400 11px/1.4 var(--ui); color:var(--muted); display:block}
-  .metric.is-ok dd{color:var(--accent)}
-  .metric.is-flag dd{color:var(--drift)}
-  .metric.is-flag{background:var(--surface-2)}
-
-  section{margin:0 0 var(--s12)}
-  .sec-head{display:flex; align-items:baseline; gap:var(--s3); margin:0 0 var(--s2)}
-  .sec-num{font:500 12px/1 var(--mono); color:var(--accent); letter-spacing:.08em; flex:none}
-  h2{font:600 17px/1.3 var(--ui); margin:0; letter-spacing:-0.01em}
-  .sec-note{font-size:13px; color:var(--muted); margin:0 0 var(--s4)}
-  .sec-note a{color:var(--code); text-decoration:none; border-bottom:1px solid var(--border)}
-  .sec-note a:hover{border-bottom-color:var(--code)}
-
-  /* ---------- findings ---------- */
-  .finding{
-    background:var(--surface); border:1px solid var(--border);
-    border-left:3px solid var(--drift); border-radius:0 4px 4px 0;
-    padding:var(--s4) var(--s6); margin:0 0 var(--s4);
-  }
-  .finding.is-medium{border-left-color:var(--drift-soft)}
-  .finding.is-settled{border-left-color:var(--accent); background:transparent}
-  .finding-top{display:flex; flex-wrap:wrap; align-items:center; gap:var(--s3); margin:0 0 var(--s3)}
-  .finding-num{
-    font:500 11px/1 var(--mono); letter-spacing:.12em; text-transform:uppercase; color:var(--muted);
-  }
-  .conf{font:500 10px/1 var(--mono); letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
-  .conf b{color:var(--text); font-weight:500}
-  .finding:not(.is-medium) .conf b{color:var(--drift)}
-  h3{font:600 16px/1.4 var(--ui); margin:0 0 var(--s3); letter-spacing:-0.01em}
-  .finding-body{margin:0 0 var(--s4); font-size:14px; color:var(--text)}
-  .evidence{list-style:none; margin:0 0 var(--s4); padding:var(--s3) 0 0; border-top:1px solid var(--border)}
-  .evidence li{
-    display:grid; grid-template-columns:78px 1fr; gap:var(--s3);
-    font:400 12px/1.6 var(--mono); color:var(--muted); padding:3px 0;
-  }
-  .evidence .src{color:var(--code)}
-  .evidence a{color:var(--code); text-decoration:none; border-bottom:1px solid var(--border)}
-  .evidence a:hover{border-bottom-color:var(--code)}
-  .cost{
-    display:flex; gap:var(--s2); align-items:baseline; font-size:13px; color:var(--text);
-    margin:0; padding-top:var(--s3); border-top:1px solid var(--border);
-  }
-  .cost .label{
-    font:500 10px/1.6 var(--mono); letter-spacing:.1em; text-transform:uppercase;
-    color:var(--muted); flex:none;
+  h2{font:600 30px/1.2 var(--ui); margin:0 0 var(--s4); letter-spacing:-0.025em; max-width:22ch}
+  .lede{font-size:17px; color:var(--muted); max-width:62ch; margin:0 0 var(--s8)}
+  .lede b{color:var(--text); font-weight:500}
+  .eyebrow{
+    font:500 11px/1 var(--mono); letter-spacing:.14em; text-transform:uppercase;
+    color:var(--accent); margin:0 0 var(--s3);
   }
 
-  /* ---------- the correction row: the loop, made a surface ---------- */
-  .respond{margin-top:var(--s4); padding-top:var(--s3); border-top:1px solid var(--border)}
-  .respond-q{
-    font:500 10px/1.6 var(--mono); letter-spacing:.1em; text-transform:uppercase;
-    color:var(--muted); margin:0 0 var(--s3);
+  /* ---------- problem beats ---------- */
+  .beats{list-style:none; margin:0; padding:0; border-top:1px solid var(--border)}
+  .beats li{
+    display:grid; grid-template-columns:210px 1fr; gap:var(--s4);
+    padding:var(--s4) 0; border-bottom:1px solid var(--border); align-items:baseline;
   }
-  .respond-acts{display:flex; flex-wrap:wrap; gap:var(--s2)}
-  .act{
-    font:500 11px/1 var(--mono); letter-spacing:.04em; padding:8px 11px; border-radius:4px;
-    border:1px solid var(--border); background:var(--surface-2); color:var(--text); cursor:pointer;
-  }
-  .act:hover{border-color:var(--muted)}
-  .act.ack{color:var(--drift)} .act.ack:hover{border-color:var(--drift)}
-  .act.changed{color:var(--accent)} .act.changed:hover{border-color:var(--accent)}
-  .outcome{
-    display:none; margin-top:var(--s3); padding:var(--s3) var(--s4);
-    background:var(--surface-2); border:1px solid var(--border); border-radius:4px;
-    font:400 12px/1.65 var(--mono); color:var(--muted);
-  }
-  .outcome.on{display:block}
-  .outcome b{color:var(--text); font-weight:500}
-  .outcome a{color:var(--code); text-decoration:none; border-bottom:1px solid var(--border)}
-  @media print{ .respond{display:none} }
+  .beats .k{font:500 12px/1.5 var(--mono); color:var(--code)}
+  .beats p{margin:0; font-size:15px}
+  .beats em{font-style:normal; color:var(--muted); display:block; font-size:13px; margin-top:3px}
 
-  /* ---------- shipped ledger ---------- */
-  .ledger{list-style:none; margin:0; padding:0; border-top:1px solid var(--border)}
-  .row{
-    display:grid; grid-template-columns:92px 1fr 56px; gap:var(--s3);
-    padding:var(--s3) 0; border-bottom:1px solid var(--border); align-items:baseline;
+  /* ---------- loop steps ---------- */
+  .loop{list-style:none; margin:0; padding:0; position:relative}
+  .loop::before{content:''; position:absolute; left:12px; top:16px; bottom:16px; width:1px; background:var(--border)}
+  .loop li{position:relative; padding:0 0 var(--s8) var(--s12)}
+  .loop li:last-child{padding-bottom:0}
+  .loop .n{
+    position:absolute; left:0; top:0; width:25px; height:25px; border-radius:50%;
+    background:var(--surface); border:1px solid var(--border); color:var(--muted);
+    font:500 10px/25px var(--mono); text-align:center; z-index:1;
   }
-  .row .ref{font:500 12px/1.5 var(--mono); color:var(--code)}
-  .row .what{margin:0; font-size:14px}
-  .row .pts{font:500 12px/1.5 var(--mono); font-variant-numeric:tabular-nums; text-align:right; color:var(--muted)}
-  .row.is-stalled .ref, .row.is-stalled .what{color:var(--muted)}
-  .row .meta{display:block; font:400 11px/1.5 var(--mono); color:var(--muted); margin-top:2px}
+  .loop li.is-key .n{border-color:var(--accent); color:var(--accent)}
+  .loop h3{font:600 17px/1.35 var(--ui); margin:0 0 var(--s2)}
+  .loop p{font-size:15px; color:var(--muted); margin:0; max-width:60ch}
+  .loop p b{color:var(--text); font-weight:500}
 
-  footer{border-top:1px solid var(--border); padding-top:var(--s6); margin-top:var(--s12)}
-  .sources{display:grid; grid-template-columns:repeat(2,1fr); gap:var(--s3) var(--s6); margin:0 0 var(--s6)}
-  .sources div{font:400 12px/1.6 var(--mono); color:var(--muted)}
-  .sources b{color:var(--text); font-weight:500; display:block; margin-bottom:2px}
-  .stamp{font:400 11px/1.6 var(--mono); color:var(--muted); margin:var(--s6) 0 0; padding-top:var(--s4); border-top:1px solid var(--border)}
-
-  :focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:2px}
-  .sr{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap}
-
-  @media (max-width:768px){
-    .strip{grid-template-columns:repeat(2,1fr)}
-    h1{font-size:23px}
-    .finding{padding:var(--s4)}
-    .sources{grid-template-columns:1fr}
-    .row{grid-template-columns:1fr auto}
-    .row .ref{grid-column:1/-1}
-    .evidence li{grid-template-columns:1fr; gap:0}
-    .evidence .src{display:block; margin-bottom:2px}
+  /* ---------- inline ledger preview ---------- */
+  .preview{
+    background:var(--surface); border:1px solid var(--border); border-radius:8px;
+    padding:var(--s6); margin:var(--s8) 0 0;
   }
-  @media print{
-    :root{--bg:#fff; --surface:#fff; --surface-2:#f4f6fa; --border:#c8d0dc;
-          --text:#0B1220; --muted:#5A6678; --accent:#1B7A46; --code:#1B7A46;
-          --drift:#B3241A; --drift-soft:#8C4A45}
-    .wrap{max-width:none; padding:0}
-    .finding{break-inside:avoid}
+  .preview-k{
+    font:500 10px/1 var(--mono); letter-spacing:.12em; text-transform:uppercase;
+    color:var(--muted); display:block; margin-bottom:var(--s4);
   }
-  @media (prefers-reduced-motion:reduce){ *{transition:none !important} }
+  .prow{
+    border:1px dashed var(--border); border-radius:6px; padding:var(--s3) var(--s4);
+    margin-bottom:var(--s3);
+  }
+  .prow:last-child{margin-bottom:0}
+  .prow-top{display:flex; align-items:flex-start; gap:var(--s3)}
+  .prow-claim{margin:0; font-size:14px; flex:1}
+  .prow-cite{display:block; margin-top:var(--s2); font:400 11px/1.5 var(--mono); color:var(--muted)}
+  .pill{
+    font:500 10px/1 var(--mono); letter-spacing:.08em; text-transform:uppercase;
+    padding:4px 6px; border-radius:2px; white-space:nowrap; flex:none; border:1px solid currentColor;
+  }
+  .pill.documented{color:var(--doc)}
+  .pill.verbal{color:var(--verbal)}
+  .pill.hunch{color:var(--hunch)}
+  .fakeacts{display:flex; gap:var(--s2); margin-top:var(--s3); padding-top:var(--s3); border-top:1px solid var(--border)}
+  .fakeact{
+    font:500 11px/1 var(--mono); padding:7px 10px; border-radius:4px;
+    border:1px solid var(--border); background:var(--surface-2); color:var(--muted);
+  }
+  .fakeact.yes{color:var(--accent)}
+
+  /* ---------- two-up cards ---------- */
+  .cols{display:grid; grid-template-columns:1fr 1fr; gap:var(--s4)}
+  .card{background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:var(--s6)}
+  .card.is-flag{border-left:3px solid var(--drift)}
+  .card.is-good{border-left:3px solid var(--accent)}
+  .card .k{
+    font:500 10px/1 var(--mono); letter-spacing:.12em; text-transform:uppercase;
+    color:var(--muted); display:block; margin-bottom:var(--s3);
+  }
+  .card h3{font:600 16px/1.4 var(--ui); margin:0 0 var(--s2)}
+  .card p{font-size:14px; color:var(--muted); margin:0; max-width:none}
+
+  /* ---------- trust grid ---------- */
+  .trust{display:grid; grid-template-columns:1fr 1fr; gap:var(--s6)}
+  .trust div{font:400 13px/1.7 var(--mono); color:var(--muted)}
+  .trust b{color:var(--text); font-weight:500; display:block; margin-bottom:var(--s2); font-family:var(--ui); font-size:14px}
+
+  /* ---------- close ---------- */
+  .close{text-align:left}
+  .close h2{max-width:20ch}
+  footer{border-top:1px solid var(--border); padding:var(--s8) 0 var(--s12)}
+  .foot{font:400 12px/1.7 var(--mono); color:var(--muted)}
+  .foot a{color:var(--code); text-decoration:none}
+
+  :focus-visible{outline:2px solid var(--accent); outline-offset:3px; border-radius:3px}
+
+  @media (max-width:820px){
+    h1{font-size:32px} h2{font-size:24px}
+    .cols, .trust{grid-template-columns:1fr}
+    .beats li{grid-template-columns:1fr; gap:var(--s1)}
+    section{padding:var(--s12) 0}
+    .hero{padding:var(--s12) 0 var(--s8)}
+  }
+  @media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto} }
 </style>
 </head>
 <body>
-<a class="nav-link nav-l" href="ledger/">Ledger →</a>
-<a class="nav-link nav-r" href="setup/">Sources →</a>
 
-<div class="wrap">
+<div class="top">
+  <div class="top-in">
+    <a class="brand" href="#top"><span class="dot" aria-hidden="true"></span>PM OS</a>
+    <span class="sp"></span>
+    <a class="top-cta" href="report/">Open the prototype</a>
+  </div>
+</div>
 
-  <header class="masthead">
-    <p class="kicker"><span class="dot" aria-hidden="true"></span>PM OS · Weekly Drift Report</p>
-    <h1>Two commitments you confirmed were contradicted by the work this week.</h1>
-    <p class="subject">
-      <b>Kestrel</b> · prepared for Dana Okonkwo, Head of Product ·
-      <span class="period">week of Jul 28–Aug 3, 2026</span>
-    </p>
-  </header>
+<div class="wrap" id="top">
 
-  <dl class="strip" aria-label="Week summary">
-    <div class="metric is-ok">
-      <dt>Holding</dt>
-      <dd>3<span class="sr"> of 5</span></dd>
-      <span class="note">of 5 confirmed</span>
+  <!-- hero -->
+  <section class="hero">
+    <p class="kicker"><span class="dot" aria-hidden="true"></span>Research preview · working prototype</p>
+    <h1>Find out on Monday, not in the QBR.</h1>
+    <p class="sub">PM OS reads where your product decisions actually get made, works out what you have committed to, and tells you every week where the work went somewhere else. <b>You do not need a strategy document to start.</b></p>
+    <div class="cta-row">
+      <a class="btn" href="report/">Open the prototype</a>
+      <a class="btn btn-ghost" href="#how">See how it works</a>
     </div>
-    <div class="metric is-flag">
-      <dt>Contradicted</dt>
-      <dd>2</dd>
-      <span class="note">1 high confidence</span>
-    </div>
-    <div class="metric">
-      <dt>Awaiting you</dt>
-      <dd>4</dd>
-      <span class="note">unconfirmed in ledger</span>
-    </div>
-    <div class="metric">
-      <dt>Sources read</dt>
-      <dd>47</dd>
-      <span class="note">issues, docs, calls</span>
-    </div>
-  </dl>
-
-  <section aria-labelledby="s1">
-    <div class="sec-head"><span class="sec-num">01</span><h2 id="s1">Where the work diverged</h2></div>
-    <p class="sec-note">Measured only against commitments you confirmed yourself, in the <a href="ledger/">ledger</a>. Anything still awaiting your review was excluded from this report.</p>
-
-    <article class="finding" data-finding>
-      <div class="finding-top">
-        <span class="finding-num">Drift 01</span>
-        <span class="conf">confidence <b>high</b></span>
-      </div>
-      <h3>Tuesday's decision reversed a commitment you confirmed two weeks ago, four hours after a customer said the opposite.</h3>
-      <p class="finding-body">B2 deprioritizes enterprise custom work until activation lands, and you confirmed it on Jul 14. On Tuesday at 14:20 the team decided in Slack that a 2,400-seat logo drives Q4. At 10:05 that same morning, a 220-seat mid-market prospect named activation speed as the reason they stalled. The decision was never written outside the thread.</p>
-      <ul class="evidence">
-        <li><span class="src">commitment</span><span>B2 · <a href="ledger/">confirmed by you Jul 14</a> · board deck slide 11</span></li>
-        <li><span class="src">decision</span><span>#product · Tue 14:20 · "Vantage drives the Q4 roadmap"</span></li>
-        <li><span class="src">counter</span><span>Gong · Tue 10:05 · Ridgeline Foods · activation named as the blocker</span></li>
-        <li><span class="src">stalled</span><span>KES-2703 · 0 pts · third consecutive week in Ready</span></li>
-      </ul>
-      <p class="cost"><span class="label">cost</span><span>21 of 34 points went to the deprioritized lane. B1, the growth lever, has had zero points behind it for three weeks.</span></p>
-
-      <div class="respond">
-        <p class="respond-q">Is this right?</p>
-        <div class="respond-acts">
-          <button type="button" class="act ack" data-r="ack">Yes, this needs attention</button>
-          <button type="button" class="act changed" data-r="changed">Not drift, we changed B2 on purpose</button>
-          <button type="button" class="act" data-r="wrong">Wrong, this isn't what happened</button>
-        </div>
-        <div class="outcome" data-out></div>
-      </div>
-    </article>
-
-    <article class="finding is-medium" data-finding>
-      <div class="finding-top">
-        <span class="finding-num">Drift 02</span>
-        <span class="conf">confidence <b>medium</b></span>
-      </div>
-      <h3>Sixteen points have gone into a lane you told us to maintain, not invest in.</h3>
-      <p class="finding-body">P2 says mobile receipt capture is table stakes and should be maintained rather than invested in. It is still sitting in your review queue because it was said aloud in a leadership sync on May 2 and never written down. We are flagging it at medium confidence for that reason: if you confirm it, this becomes a high-confidence finding next week. If you dismiss it, the sixteen points were intentional and we will stop asking.</p>
-      <ul class="evidence">
-        <li><span class="src">commitment</span><span>P2 · <a href="ledger/">awaiting your review</a> · leadership sync May 2, verbal</span></li>
-        <li><span class="src">shipped</span><span>KES-2860 · 5 pts this week · 16 pts cumulative since Jul 7</span></li>
-      </ul>
-      <p class="cost"><span class="label">cost</span><span>Low in points. High in ambiguity: an unconfirmed commitment cannot be drifted from or defended.</span></p>
-
-      <div class="respond">
-        <p class="respond-q">Is this right?</p>
-        <div class="respond-acts">
-          <button type="button" class="act ack" data-r="ack">Yes, this needs attention</button>
-          <button type="button" class="act changed" data-r="changed">Not drift, that was intentional</button>
-          <button type="button" class="act" data-r="wrong">Wrong, this isn't what happened</button>
-        </div>
-        <div class="outcome" data-out></div>
-      </div>
-    </article>
+    <p class="cta-note">Three screens, clickable, no signup · sample company, invented data</p>
   </section>
 
-  <section aria-labelledby="s2">
-    <div class="sec-head"><span class="sec-num">02</span><h2 id="s2">What shipped and got decided</h2></div>
-    <p class="sec-note">34 story points across 14 issues. The four that move the argument, plus two decisions made outside the tracker.</p>
-    <ul class="ledger">
-      <li class="row">
-        <span class="ref">KES-2856</span>
-        <p class="what">SAML SSO build-out for Vantage Corp, 2,400 seats
-          <span class="meta">merged Wed · single-customer scope · largest item of the week</span></p>
-        <span class="pts">13</span>
-      </li>
-      <li class="row">
-        <span class="ref">KES-2841</span>
-        <p class="what">Report builder: column picker v1
-          <span class="meta">merged Thu · matches B5 as you revised it on Jul 28 · not flagged</span></p>
-        <span class="pts">8</span>
-      </li>
-      <li class="row">
-        <span class="ref">KES-2860</span>
-        <p class="what">Receipt OCR accuracy pass, third in three weeks
-          <span class="meta">merged Tue · 16 pts cumulative since Jul 7</span></p>
-        <span class="pts">5</span>
-      </li>
-      <li class="row is-stalled">
-        <span class="ref">KES-2703</span>
-        <p class="what">Activation checklist, the only issue attached to B1
-          <span class="meta">still in Ready · third consecutive week at zero movement</span></p>
-        <span class="pts">0</span>
-      </li>
-      <li class="row">
-        <span class="ref">#product</span>
-        <p class="what">Decision, Tue 14:20: "Vantage drives the Q4 roadmap. Biggest logo, let's not lose them."
-          <span class="meta">Slack · 3 approvals, no dissent · proposed to your ledger as P1</span></p>
-        <span class="pts">—</span>
-      </li>
-      <li class="row">
-        <span class="ref">Gong</span>
-        <p class="what">Call, Tue 10:05, Ridgeline Foods, 220 seats: "We stalled because nobody on my team got a receipt synced in the first month."
-          <span class="meta">mid-market prospect · 4h 15m before the Slack decision</span></p>
-        <span class="pts">—</span>
-      </li>
+  <!-- problem -->
+  <section>
+    <p class="eyebrow">The problem</p>
+    <h2>Nobody is checking the work against the plan, because nobody has time to read everything.</h2>
+    <ul class="beats">
+      <li><span class="k">the strategy doc</span><p>Accurate the week it was written. Stale within a month.<em>and half of what you actually decided never made it in there</em></p></li>
+      <li><span class="k">the decisions</span><p>Made in a thread on a Tuesday afternoon, agreed by three people, never written down again.<em>this is where most commitments live, and nothing reads it</em></p></li>
+      <li><span class="k">the dashboards</span><p>Report velocity and cycle time. Activity, not intent.<em>they cannot tell you this sprint contradicts something you decided in June</em></p></li>
+      <li><span class="k">the QBR</span><p>"Why did we build that instead of this?" reconstructed from memory and search.<em>hours of tab-opening, days before the meeting</em></p></li>
     </ul>
   </section>
 
-  <footer>
-    <div class="sources">
-      <div><b>Read this week</b>Linear · 34 issues, 14 closed<br>Notion · Q3 Strategy, Roadmap RFC #48<br>Slack · #product, #eng-releases, 412 msgs<br>Gong · 3 calls, 2h 51m</div>
-      <div><b>Not read</b>#design, direct messages, Figma comments, the board deck appendix. Drift in those surfaces would not appear here.</div>
+  <!-- how it works -->
+  <section id="how">
+    <p class="eyebrow">How it works</p>
+    <h2>One loop. Intent in, drift out, corrections back.</h2>
+    <p class="lede">Most tools in this space ask you to maintain context. That is the thing nobody does. So this one builds the context from what your team is already doing, and asks you to correct it rather than write it.</p>
+    <ol class="loop">
+      <li class="is-key">
+        <span class="n">1</span>
+        <h3>It reads where decisions happen</h3>
+        <p>Team chat, your delivery tracker, customer calls, and your documents if you have any. Read-only, always. <b>A written strategy is optional</b>, because most of what a team commits to was never written anywhere.</p>
+      </li>
+      <li class="is-key">
+        <span class="n">2</span>
+        <h3>It proposes what you have committed to</h3>
+        <p>Anything that reads like a commitment goes into a ledger as a proposal, tagged with where it came from and how sure we are. <b>You confirm, correct, or dismiss each one.</b> A wrong guess costs you one click and never comes back.</p>
+      </li>
+      <li>
+        <span class="n">3</span>
+        <h3>Every Monday it reports where the work diverged</h3>
+        <p>Measured only against commitments you confirmed yourself, with every finding citing its sources. Nothing unconfirmed is ever used to tell you that you are off track, which is what makes a finding hard to argue with.</p>
+      </li>
+      <li>
+        <span class="n">4</span>
+        <h3>Your corrections stick</h3>
+        <p>Reply "not drift, we changed that on purpose" and the commitment updates, dated, with your name on it. That finding never returns. <b>The ledger gets more accurate every week you use it.</b></p>
+      </li>
+    </ol>
+
+    <div class="preview">
+      <span class="preview-k">From the ledger · a proposal awaiting review</span>
+      <div class="prow">
+        <div class="prow-top">
+          <p class="prow-claim">Vantage Corp drives the Q4 roadmap. Their requirements take precedence over the activation work.</p>
+          <span class="pill verbal">verbal</span>
+        </div>
+        <span class="prow-cite">#product · Tue Jul 28, 14:20 · 3 approvals, no dissent · never written elsewhere</span>
+        <div class="fakeacts" aria-hidden="true">
+          <span class="fakeact yes">Yes, that's a commitment</span>
+          <span class="fakeact">Not quite, let me fix it</span>
+          <span class="fakeact">Not a commitment</span>
+        </div>
+      </div>
     </div>
-    <p class="stamp">Generated Mon Aug 3, 06:00 · measured against 5 confirmed commitments · 4 more awaiting your review in the <a href="ledger/" style="color:var(--code)">ledger</a></p>
-  </footer>
+  </section>
+
+  <!-- the difference -->
+  <section>
+    <p class="eyebrow">Why this is different</p>
+    <h2>Everyone else sells you a memory. This tells you when you broke a promise.</h2>
+    <div class="cols">
+      <div class="card is-flag">
+        <span class="k">What the category does</span>
+        <h3>Answers "what do we know?"</h3>
+        <p>Search, retrieval, notes, a company brain. All of it looks backwards at what exists, and none of it holds an opinion about what should have happened. That is a useful tool and a fair fight, and it is not this.</p>
+      </div>
+      <div class="card is-good">
+        <span class="k">What this does</span>
+        <h3>Answers "did we do what we said?"</h3>
+        <p>It needs a view on what you committed to, which is why the ledger is the product and the report is the output. It is also why your corrections matter: they are the only thing that makes the view accurate, and they do not transfer to anyone else.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- trust -->
+  <section>
+    <p class="eyebrow">What it touches</p>
+    <h2>Read-only, and specific about the edges.</h2>
+    <div class="trust">
+      <div><b>What it reads</b>The channels you name · your delivery tracker · call transcripts you connect · documents you point it at</div>
+      <div><b>What it never does</b>Write to your tools · post or comment as you · read direct messages · read channels you did not name</div>
+      <div><b>Where the ledger lives</b>Plain text in a repository you control. Encryption at rest and an audit log of every read and write, before a second team is ever added.</div>
+      <div><b>What it admits</b>Every report states what it did not read. A tool that implies total coverage gets caught being wrong once and is never opened again.</div>
+    </div>
+  </section>
+
+  <!-- close -->
+  <section class="close">
+    <p class="eyebrow">Take a look</p>
+    <h2>Three screens. About two minutes.</h2>
+    <p class="lede">The prototype runs on Kestrel, an invented B2B expense company, so there is no real data on screen. Everything else is exactly what ships: the report a Head of Product would get on Monday, the ledger behind it, and the setup that produces both.</p>
+    <div class="cta-row">
+      <a class="btn" href="report/">Open the prototype</a>
+      <a class="btn btn-ghost" href="ledger/">Skip to the ledger</a>
+    </div>
+  </section>
 
 </div>
 
-<script>
-(function(){
-  "use strict";
-  // Corrections are the product, not a footnote: every answer states exactly
-  // what it changes in the ledger, so the loop is visible rather than implied.
-  var COPY = {
-    ack: {
-      cls: "",
-      html: "Logged as <b>acknowledged</b>, dated today. The commitment stays as written and this finding will carry forward next week until the work or the commitment changes."
-    },
-    changed: {
-      cls: "is-settled",
-      html: "Recorded as a <b>deliberate change, not drift</b>. The commitment is updated in your <a href='ledger/'>ledger</a> with today's date and your name against it. This finding will not appear again, and next week's report measures against the new version."
-    },
-    wrong: {
-      cls: "is-settled",
-      html: "Marked as a <b>bad finding</b>. We keep the sources that produced it so the same inference is not repeated, and this will not be raised again."
-    }
-  };
+<footer>
+  <div class="wrap">
+    <p class="foot">
+      PM OS · research preview · 2026<br>
+      Prototype: <a href="report/">weekly report</a> · <a href="ledger/">commitment ledger</a> · <a href="setup/">sources</a>
+    </p>
+  </div>
+</footer>
 
-  document.querySelectorAll("[data-finding]").forEach(function(f){
-    f.addEventListener("click", function(e){
-      var btn = e.target.closest("[data-r]");
-      if (!btn) return;
-      var r = COPY[btn.getAttribute("data-r")];
-      var out = f.querySelector("[data-out]");
-      out.innerHTML = r.html;
-      out.classList.add("on");
-      f.querySelector(".respond-acts").remove();
-      f.querySelector(".respond-q").textContent = "Your response";
-      if (r.cls) f.classList.add(r.cls);
-    });
-  });
-})();
-</script>
 </body>
 </html>
