@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kestrel · Assumption Ledger</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#070A11; --surface:#0F1420; --surface-2:#141B29; --border:#1E2D45;
+    --accent:#3DDC84; --code:#7FE8B0; --text:#E2E8F0; --muted:#64748B;
+    --doc:#7FE8B0; --verbal:#5BC0EB; --hunch:#C9A227; --industry:#8A93A6;
+    --drift:#FF6B5B; --drift-soft:#8C4A45;
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s6:24px; --s8:32px; --s12:48px;
+    --ui:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; background:var(--bg); color:var(--text);
+    font:400 15px/1.6 var(--ui); letter-spacing:-0.005em; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:880px; margin:0 auto; padding:calc(var(--s8) + 40px) var(--s6) var(--s12)}
+
+  /* ---------- prototype nav ---------- */
+  .pnav{
+    position:fixed; top:0; left:0; right:0; z-index:30;
+    display:flex; align-items:center; gap:var(--s4);
+    padding:var(--s3) var(--s6);
+    background:rgba(7,10,17,.92); border-bottom:1px solid var(--border);
+    backdrop-filter:blur(6px);
+  }
+  .pnav a{
+    font:500 11px/1 var(--mono); letter-spacing:.08em; text-transform:uppercase;
+    color:var(--muted); text-decoration:none; padding:7px 9px; border-radius:4px;
+  }
+  .pnav a:hover{color:var(--text)}
+  .pnav .home{color:var(--text); border:1px solid var(--border); background:var(--surface)}
+  .pnav .home:hover{border-color:var(--accent); color:var(--accent)}
+  .pnav .sp{flex:1}
+  .pnav .set{display:flex; gap:var(--s1)}
+  .pnav .set a.is-current{color:var(--accent); background:var(--surface); border:1px solid var(--border)}
+  @media print{ .pnav{display:none} }
+  @media (max-width:768px){
+    .pnav{padding:var(--s2) var(--s3); gap:var(--s2); overflow-x:auto}
+    .pnav a{padding:6px 7px; letter-spacing:.04em; white-space:nowrap}
+    .pnav .sp{flex:0}
+  }
+
+  /* ---------- masthead ---------- */
+  .masthead{border-bottom:1px solid var(--border); padding-bottom:var(--s6); margin-bottom:var(--s6)}
+  .kicker{
+    font:500 11px/1 var(--mono); letter-spacing:.14em; text-transform:uppercase;
+    color:var(--muted); display:flex; align-items:center; gap:var(--s2); margin:0 0 var(--s4);
+  }
+  .kicker .dot{width:6px; height:6px; border-radius:50%; background:var(--accent); flex:none}
+  h1{font:600 27px/1.25 var(--ui); margin:0 0 var(--s3); letter-spacing:-0.02em}
+  .subject{color:var(--muted); font-size:14px; margin:0}
+  .subject b{color:var(--text); font-weight:500}
+  .period{font-family:var(--mono); font-size:13px; color:var(--code)}
+
+  /* ---------- strip ---------- */
+  .strip{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:1px;
+    background:var(--border); border:1px solid var(--border); border-radius:4px;
+    overflow:hidden; margin:0 0 var(--s8);
+  }
+  .metric{background:var(--surface); padding:var(--s4)}
+  .metric dt{
+    font:500 10px/1.3 var(--mono); letter-spacing:.1em; text-transform:uppercase;
+    color:var(--muted); margin:0 0 var(--s2);
+  }
+  .metric dd{
+    font:500 25px/1 var(--mono); font-variant-numeric:tabular-nums;
+    margin:0 0 var(--s1); letter-spacing:-0.02em;
+  }
+  .metric .note{font:400 11px/1.4 var(--ui); color:var(--muted); display:block}
+  .metric.is-flag dd{color:var(--drift)}
+  .metric.is-flag{background:var(--surface-2)}
+
+  /* ---------- sections ---------- */
+  section{margin:0 0 var(--s12)}
+  .sec-head{display:flex; align-items:baseline; gap:var(--s3); margin:0 0 var(--s2)}
+  .sec-num{font:500 12px/1 var(--mono); color:var(--accent); letter-spacing:.08em; flex:none}
+  h2{font:600 17px/1.3 var(--ui); margin:0; letter-spacing:-0.01em}
+  .sec-note{font-size:13px; color:var(--muted); margin:0 0 var(--s4); max-width:66ch}
+  .sec-note a{color:var(--code); text-decoration:none; border-bottom:1px solid var(--border)}
+
+  /* ---------- assumption rows ---------- */
+  .items{list-style:none; margin:0; padding:0}
+  .item{
+    background:var(--surface); border:1px solid var(--border); border-radius:6px;
+    padding:var(--s4); margin:0 0 var(--s3);
+  }
+  .item.risk-high{border-left:3px solid var(--drift)}
+  .item.risk-med{border-left:3px solid var(--drift-soft)}
+  .item.is-held{border-left:3px solid var(--accent)}
+  .item-top{display:flex; align-items:flex-start; gap:var(--s3); margin:0 0 var(--s2)}
+  .item-id{font:500 12px/1.6 var(--mono); color:var(--muted); flex:none; min-width:26px}
+  .item-claim{margin:0; font-size:14px; color:var(--text); flex:1}
+  .pill{
+    font:500 10px/1 var(--mono); letter-spacing:.08em; text-transform:uppercase;
+    padding:4px 6px; border-radius:2px; white-space:nowrap; flex:none;
+    border:1px solid currentColor;
+  }
+  .pill.documented{color:var(--doc)}
+  .pill.verbal{color:var(--verbal)}
+  .pill.hunch{color:var(--hunch)}
+  .pill.industry{color:var(--industry)}
+
+  /* the exposure line: provenance x age x load, which is the whole idea */
+  .expo{
+    display:flex; flex-wrap:wrap; gap:var(--s3);
+    font:400 11px/1.6 var(--mono); color:var(--muted); margin-top:var(--s2);
+  }
+  .expo span{white-space:nowrap}
+  .expo .warn{color:var(--drift)}
+  .expo .ok{color:var(--accent)}
+  .why{
+    font-size:13px; color:var(--text); margin:var(--s3) 0 0;
+    padding-top:var(--s3); border-top:1px solid var(--border);
+  }
+  .why b{font-weight:500}
+  .deps{
+    font:400 11px/1.6 var(--mono); color:var(--muted); margin:var(--s2) 0 0;
+  }
+  .deps b{color:var(--text); font-weight:500}
+
+  .acts{display:flex; flex-wrap:wrap; gap:var(--s2); margin-top:var(--s3); padding-top:var(--s3); border-top:1px solid var(--border)}
+  .act{
+    font:500 11px/1 var(--mono); letter-spacing:.04em; padding:7px 10px; border-radius:4px;
+    border:1px solid var(--border); background:var(--surface-2); color:var(--text); cursor:pointer;
+  }
+  .act:hover{border-color:var(--muted)}
+  .act.yes{color:var(--accent)} .act.yes:hover{border-color:var(--accent)}
+  .act.no{color:var(--drift)} .act.no:hover{border-color:var(--drift)}
+  .resolved{
+    font:500 11px/1.6 var(--mono); letter-spacing:.04em; color:var(--accent);
+    padding:7px 0; margin:0;
+  }
+  .resolved.no{color:var(--drift)}
+  .resolved.muted{color:var(--muted)}
+
+  /* cascade panel: what breaks if this is false */
+  .cascade{
+    display:none; margin-top:var(--s3); padding:var(--s3) var(--s4);
+    background:var(--surface-2); border:1px solid var(--drift-soft);
+    border-left:3px solid var(--drift); border-radius:0 4px 4px 0;
+  }
+  .cascade.on{display:block}
+  .cascade-k{
+    font:500 10px/1 var(--mono); letter-spacing:.1em; text-transform:uppercase;
+    color:var(--drift); display:block; margin-bottom:var(--s2);
+  }
+  .cascade ul{list-style:none; margin:0; padding:0}
+  .cascade li{font:400 12px/1.7 var(--mono); color:var(--muted)}
+  .cascade li b{color:var(--text); font-weight:500}
+  .cascade p{font-size:13px; color:var(--text); margin:var(--s3) 0 0}
+
+  .empty{
+    border:1px dashed var(--border); border-radius:6px; padding:var(--s6);
+    text-align:center; color:var(--muted); font-size:13px; display:none;
+  }
+  .empty.on{display:block}
+
+  footer{border-top:1px solid var(--border); padding-top:var(--s6); margin-top:var(--s12)}
+  .sources{display:grid; grid-template-columns:repeat(2,1fr); gap:var(--s3) var(--s6); margin:0 0 var(--s6)}
+  .sources div{font:400 12px/1.6 var(--mono); color:var(--muted)}
+  .sources b{color:var(--text); font-weight:500; display:block; margin-bottom:2px}
+  .stamp{font:400 11px/1.6 var(--mono); color:var(--muted); margin:var(--s6) 0 0; padding-top:var(--s4); border-top:1px solid var(--border)}
+
+  :focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:2px}
+  .sr{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap}
+
+  @media (max-width:768px){
+    .strip{grid-template-columns:repeat(2,1fr)}
+    h1{font-size:23px}
+    .sources{grid-template-columns:1fr}
+    .item-top{flex-wrap:wrap}
+  }
+  @media (prefers-reduced-motion:reduce){ *{transition:none !important} }
+</style>
+</head>
+<body>
+<nav class="pnav" aria-label="Prototype"><a class="home" href="../index.html">&larr; PM OS</a><span class="sp"></span><span class="set"><a href="../report/index.html">Report</a><a href="../ledger/index.html">Commitments</a><a href="../assumptions/index.html" class="is-current">Assumptions</a><a href="../setup/index.html">Sources</a></span></nav>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="kicker"><span class="dot" aria-hidden="true"></span>PM OS · Assumption Ledger</p>
+    <h1 data-live-head>Three things the roadmap depends on have never been tested.</h1>
+    <p class="subject">
+      <b>Kestrel</b> · maintained for Dana Okonkwo, Head of Product ·
+      <span class="period">as of Aug 3, 2026</span>
+    </p>
+  </header>
+
+  <dl class="strip" aria-label="Assumption summary">
+    <div class="metric">
+      <dt>Tracked</dt>
+      <dd>12</dd>
+      <span class="note">beliefs found in your sources</span>
+    </div>
+    <div class="metric">
+      <dt>Load-bearing</dt>
+      <dd>6</dd>
+      <span class="note">active work depends on them</span>
+    </div>
+    <div class="metric is-flag">
+      <dt>Never tested</dt>
+      <dd id="mUntested">3</dd>
+      <span class="note">and something depends on each</span>
+    </div>
+    <div class="metric is-flag">
+      <dt>Contradicted</dt>
+      <dd>1</dd>
+      <span class="note">by evidence this week</span>
+    </div>
+  </dl>
+
+  <section aria-labelledby="s1">
+    <div class="sec-head"><span class="sec-num">01</span><h2 id="s1">Contradicted by this week's evidence</h2></div>
+    <p class="sec-note">Something you heard this week disagrees with a belief the roadmap is built on. This is the only section that is time-sensitive.</p>
+
+    <ul class="items">
+      <li class="item risk-high" data-item data-deps="2">
+        <div class="item-top">
+          <span class="item-id">A1</span>
+          <p class="item-claim">Activation drops at connector setup. Thirty-eight percent of new workspaces never finish their first connector.</p>
+          <span class="pill documented">documented</span>
+        </div>
+        <div class="expo">
+          <span>evidence: funnel analysis, Apr 14</span>
+          <span class="warn">111 days old</span>
+          <span>2 dependents</span>
+        </div>
+        <p class="why"><b>Why this surfaced.</b> On Tuesday a 220-seat prospect said they stalled because nobody on their team got a receipt synced in the first month. That is a different failure point from connector setup, and it is the second call this quarter to describe it that way. The original funnel analysis predates the March onboarding change.</p>
+        <p class="deps">Depends on this: <b>B1</b> activation is the FY27 growth lever · <b>KES-2703</b> activation checklist</p>
+        <div class="acts">
+          <button type="button" class="act yes" data-act="hold">Still true, re-verified</button>
+          <button type="button" class="act no" data-act="drop">No longer true</button>
+          <button type="button" class="act" data-act="retest">Retest this</button>
+        </div>
+        <div class="cascade" data-cascade></div>
+      </li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="s2">
+    <div class="sec-head"><span class="sec-num">02</span><h2 id="s2">Load-bearing and never tested</h2></div>
+    <p class="sec-note">Ranked by exposure, which is how weak the evidence is multiplied by how much work is riding on it. These are not urgent this week. They are the ones that quietly cost you a quarter.</p>
+
+    <ul class="items" id="riskList">
+      <li class="item risk-high" data-item data-deps="3">
+        <div class="item-top">
+          <span class="item-id">A2</span>
+          <p class="item-claim">Data leads are the primary buyer, and they personally own the activation number.</p>
+          <span class="pill hunch">hunch</span>
+        </div>
+        <div class="expo">
+          <span>source: 1:1 note, Jun 3</span>
+          <span class="warn">never tested</span>
+          <span class="warn">3 dependents</span>
+        </div>
+        <p class="why"><b>Why this is the riskiest thing here.</b> It was written down as "I think" with no supporting analysis, and it is now the foundation of both the ICP definition and the activation target. Nothing in twelve customer calls this quarter tested who actually owns activation inside the buyer.</p>
+        <p class="deps">Depends on this: <b>B1</b> activation growth lever · <b>B2</b> mid-market ICP · <b>Q4 pricing model</b></p>
+        <div class="acts">
+          <button type="button" class="act yes" data-act="hold">Still true, re-verified</button>
+          <button type="button" class="act no" data-act="drop">No longer true</button>
+          <button type="button" class="act" data-act="retest">Retest this</button>
+        </div>
+        <div class="cascade" data-cascade></div>
+      </li>
+
+      <li class="item risk-med" data-item data-deps="1">
+        <div class="item-top">
+          <span class="item-id">A3</span>
+          <p class="item-claim">Mobile receipt capture is table stakes rather than a differentiator.</p>
+          <span class="pill verbal">verbal</span>
+        </div>
+        <div class="expo">
+          <span>source: leadership sync, May 2</span>
+          <span class="warn">never written down</span>
+          <span>1 dependent</span>
+        </div>
+        <p class="why"><b>The team is voting against this one.</b> Sixteen points have gone into receipt OCR since Jul 7. Either the belief is wrong or the team does not share it, and both are worth knowing before the next planning cycle.</p>
+        <p class="deps">Depends on this: <b>P2</b> maintain-do-not-invest commitment</p>
+        <div class="acts">
+          <button type="button" class="act yes" data-act="hold">Still true, re-verified</button>
+          <button type="button" class="act no" data-act="drop">No longer true</button>
+          <button type="button" class="act" data-act="retest">Retest this</button>
+        </div>
+        <div class="cascade" data-cascade></div>
+      </li>
+
+      <li class="item risk-med" data-item data-deps="1">
+        <div class="item-top">
+          <span class="item-id">A4</span>
+          <p class="item-claim">Enterprise deals stall at security review, which is why they are slow to close.</p>
+          <span class="pill verbal">verbal</span>
+        </div>
+        <div class="expo">
+          <span>source: pipeline review, Feb 20</span>
+          <span class="warn">164 days old</span>
+          <span>1 dependent</span>
+        </div>
+        <p class="why"><b>Possibly already resolved.</b> Vantage closed this week at 2,400 seats and the blocker was SSO rather than security review. One data point is not a refutation, but this belief is old enough that it is worth a deliberate check rather than an assumption.</p>
+        <p class="deps">Depends on this: <b>B2</b> deprioritize enterprise until activation lands</p>
+        <div class="acts">
+          <button type="button" class="act yes" data-act="hold">Still true, re-verified</button>
+          <button type="button" class="act no" data-act="drop">No longer true</button>
+          <button type="button" class="act" data-act="retest">Retest this</button>
+        </div>
+        <div class="cascade" data-cascade></div>
+      </li>
+    </ul>
+    <p class="empty" id="riskEmpty">Nothing load-bearing is untested. This is unusual and worth enjoying.</p>
+  </section>
+
+  <section aria-labelledby="s3">
+    <div class="sec-head"><span class="sec-num">03</span><h2 id="s3">Holding</h2></div>
+    <p class="sec-note">Verified recently enough that the report treats them as sound. Each one still carries its own decay clock.</p>
+    <ul class="items">
+      <li class="item is-held">
+        <div class="item-top">
+          <span class="item-id">A5</span>
+          <p class="item-claim">Finance teams, not IT, approve expense tooling in companies under 500 people.</p>
+          <span class="pill documented">documented</span>
+        </div>
+        <div class="expo">
+          <span>evidence: 9 of 12 interviews, Jul</span>
+          <span class="ok">re-verified 11 days ago</span>
+          <span>2 dependents</span>
+        </div>
+      </li>
+      <li class="item is-held">
+        <div class="item-top">
+          <span class="item-id">A6</span>
+          <p class="item-claim">Receipt volume peaks in the first week of each month, which is when reliability matters most.</p>
+          <span class="pill documented">documented</span>
+        </div>
+        <div class="expo">
+          <span>evidence: product telemetry, rolling</span>
+          <span class="ok">continuously verified</span>
+          <span>1 dependent</span>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  <footer>
+    <div class="sources">
+      <div><b>Where these came from</b>Gong · 12 calls this quarter<br>Notion · Q3 Strategy, research folder<br>Slack · #product, #eng-releases<br>1:1 notes you connected</div>
+      <div><b>What this cannot see</b>Beliefs never expressed anywhere we read, and anything held only in someone's head. An assumption nobody wrote or said out loud will not appear here.</div>
+    </div>
+    <p class="stamp" id="stamp">Ledger rebuilt Mon Aug 3, 06:00 · 12 tracked, 6 load-bearing, 3 never tested · decay is measured from last verification, not from creation</p>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var untested = 3;
+  var elU = document.getElementById("mUntested"),
+      head = document.querySelector("[data-live-head]"),
+      empty = document.getElementById("riskEmpty"),
+      riskList = document.getElementById("riskList"),
+      stamp = document.getElementById("stamp");
+
+  function render(){
+    elU.textContent = untested;
+    empty.classList.toggle("on", riskList.querySelectorAll("[data-item]:not(.is-done)").length === 0);
+    stamp.textContent = "Ledger rebuilt Mon Aug 3, 06:00 · 12 tracked, 6 load-bearing, " + untested +
+      " never tested · decay is measured from last verification, not from creation";
+    head.textContent = untested === 0
+      ? "Nothing load-bearing is untested this week."
+      : (untested === 1 ? "One thing the roadmap depends on has never been tested."
+                        : untested + " things the roadmap depends on have never been tested.");
+  }
+
+  // Retiring an assumption is the interesting case: the point is not the row,
+  // it is everything downstream that was quietly resting on it.
+  function cascadeHTML(item){
+    var deps = item.querySelector(".deps").innerHTML.replace(/^Depends on this:\s*/, "");
+    var n = item.getAttribute("data-deps");
+    return '<span class="cascade-k">' + n + ' ' + (n === "1" ? "item rests" : "items rest") + ' on this</span>' +
+           '<ul><li>' + deps + '</li></ul>' +
+           '<p>Retired and dated today. Each of these is now flagged as resting on a belief you have withdrawn, ' +
+           'and next Monday&rsquo;s report opens with them rather than burying them.</p>';
+  }
+
+  function settle(item, label, cls){
+    var acts = item.querySelector(".acts");
+    if (!acts) return;
+    var p = document.createElement("p");
+    p.className = "resolved " + cls;
+    p.textContent = label;
+    acts.replaceWith(p);
+    item.classList.add("is-done");
+  }
+
+  document.addEventListener("click", function(e){
+    var btn = e.target.closest("[data-act]");
+    if (!btn) return;
+    var item = btn.closest("[data-item]");
+    var act = btn.getAttribute("data-act");
+
+    if (act === "hold") {
+      if (item.parentElement === riskList) untested--;
+      item.classList.remove("risk-high", "risk-med");
+      item.classList.add("is-held");
+      settle(item, "✓ Re-verified today. The decay clock resets and the report treats it as sound.", "");
+      render();
+      return;
+    }
+
+    if (act === "drop") {
+      if (item.parentElement === riskList) untested--;
+      var c = item.querySelector("[data-cascade]");
+      c.innerHTML = cascadeHTML(item);
+      c.classList.add("on");
+      settle(item, "Retired. Everything below inherits the risk.", "no");
+      render();
+      return;
+    }
+
+    if (act === "retest") {
+      settle(item, "Queued for research. It stays load-bearing until something tests it, and the report will keep saying so.", "muted");
+      render();
+      return;
+    }
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
