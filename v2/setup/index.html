@@ -141,14 +141,14 @@
   .pnav .set a.is-current{color:var(--accent); background:var(--surface); border:1px solid var(--border)}
   @media print{ .pnav{display:none} }
   @media (max-width:768px){
-    .pnav{padding:var(--s2) var(--s3); gap:var(--s2)}
-    .pnav a{padding:6px 7px; letter-spacing:.04em}
+    .pnav{padding:var(--s2) var(--s3); gap:var(--s2); overflow-x:auto}
+    .pnav a{padding:6px 7px; letter-spacing:.04em; white-space:nowrap}
     .pnav .sp{flex:0}
   }
 </style>
 </head>
 <body>
-<nav class="pnav" aria-label="Prototype"><a class="home" href="../index.html">&larr; PM OS</a><span class="sp"></span><span class="set"><a href="../report/index.html">Report</a><a href="../ledger/index.html">Ledger</a><a href="../setup/index.html" class="is-current">Sources</a></span></nav>
+<nav class="pnav" aria-label="Prototype"><a class="home" href="../index.html">&larr; PM OS</a><span class="sp"></span><span class="set"><a href="../report/index.html">Report</a><a href="../ledger/index.html">Commitments</a><a href="../assumptions/index.html">Assumptions</a><a href="../setup/index.html" class="is-current">Sources</a></span></nav>
 
 <div class="wrap">
 
