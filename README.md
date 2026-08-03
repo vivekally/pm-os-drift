@@ -2,6 +2,43 @@
 
 The weekly strategy drift report for Heads of Product, and the strategy behind it.
 
+## Live links
+
+Everything below is published and clickable. No signup, no build step.
+
+**Current site** — `vivekally.github.io/pm-os-drift/`
+
+| Link | What it is |
+|---|---|
+| [Weekly drift report](https://vivekally.github.io/pm-os-drift/) | The artifact. Week of Jul 28, showing a correction from the previous week closing |
+| [Report #1](https://vivekally.github.io/pm-os-drift/report-1/) | The previous week, kept so the correction above can be checked against what was actually flagged |
+| [Setup flow](https://vivekally.github.io/pm-os-drift/onboarding/) | Four-source connection flow |
+| [Forum Ventures deck](https://vivekally.github.io/pm-os-drift/forum-deck/) | 13 slides, companion to the studio founder memo |
+| [/drift-report-w2/](https://vivekally.github.io/pm-os-drift/drift-report-w2/) | Redirect, kept so previously shared links keep working |
+
+**v2 rebuild** — the product surface rebuilt around the correction loop
+
+| Link | What it is |
+|---|---|
+| [Landing page](https://vivekally.github.io/pm-os-drift/v2/) | One entry point into the prototype |
+| [Weekly report](https://vivekally.github.io/pm-os-drift/v2/report/index.html) | Findings measured only against confirmed commitments, each correctable inline |
+| [Commitment ledger](https://vivekally.github.io/pm-os-drift/v2/ledger/index.html) | What we think you committed to. Confirm, correct or dismiss |
+| [Assumption ledger](https://vivekally.github.io/pm-os-drift/v2/assumptions/index.html) | What the roadmap takes on faith, ranked by evidence weakness times age times dependents |
+| [Sources](https://vivekally.github.io/pm-os-drift/v2/setup/index.html) | Capture-first setup. No strategy document required |
+
+**Earlier work** — separate repos, still live
+
+| Link | What it is |
+|---|---|
+| [pm-os-landing](https://vivekally.github.io/pm-os-landing/) | Landing page for the previous strategy |
+| [pm-os-deck](https://vivekally.github.io/pm-os-deck/) | Investor deck for the previous strategy |
+| [pm-os-prototype](https://vivekally.github.io/pm-os-prototype/) | 13-screen clickable prototype, three phases |
+| [PM-OS-with-Second-Brain](https://vivekally.github.io/PM-OS-with-Second-Brain/) | Original second-brain designs |
+
+> The three "earlier work" sites describe a different buyer ($39/seat, PM
+> individual contributor) than this repo does. That is a known inconsistency,
+> not an oversight. See the table below for what changed.
+
 A Head of Product cannot tell, week to week, whether their team is building what
 the strategy says they should be building. Documented intent sits in Notion and
 goes stale in three weeks. Actual behavior lives in Linear/Jira, Slack threads,
@@ -43,8 +80,13 @@ docs/
   design-2026-07-29-drift-report.md   approved design doc — premises, approaches, assignment
   whitespace-teardown.md              the structural reference model, decomposed
 designs/
-  drift-report/index.html             the report prototype (self-contained, no deps)
-  drift-report/meta.json              build + verification record
+  site/index.html                     the current weekly report (published at /)
+  site/report-1/index.html            the previous week, kept for verification
+  site/onboarding/index.html          four-source setup flow
+  site/drift-report-w2/index.html     redirect stub for a previously shared link
+  v2/index.html                       v2 landing page
+  v2/report|ledger|assumptions|setup  the v2 prototype, four screens
+  forum-deck/index.html               Forum Ventures studio deck
 DESIGN.md                             Workbench B tokens, provenance + drift severity colors
 TODOS.md                              what to do next, and what gates what
 ```
@@ -52,7 +94,13 @@ TODOS.md                              what to do next, and what gates what
 ## Open the prototype
 
 ```bash
-open designs/drift-report/index.html
+open designs/site/index.html
+```
+
+Or the v2 rebuild:
+
+```bash
+open designs/v2/index.html
 ```
 
 No build step, no server, no network dependency for the JavaScript. Resize the
